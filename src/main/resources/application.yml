@@ -13,3 +13,7 @@ logging:
     com.neu: debug
   pattern:
     dateformat: mm:ss.SSS
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true

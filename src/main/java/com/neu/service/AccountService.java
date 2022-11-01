@@ -7,4 +7,8 @@ import com.neu.dao.entity.Account;
 public interface AccountService extends IService<Account> {
 
     HttpResponseEntity loginByUserName(String userName,String password);
+
+    HttpResponseEntity loginByPhone(String phone, String code);
+
+    HttpResponseEntity sendCode(String phone);
 }

@@ -2,8 +2,7 @@ package com.neu.bean;
 
 import java.io.Serializable;
 
-//@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-//@Data
+
 public class HttpResponseEntity implements Serializable {
 
     private String code; //状态码

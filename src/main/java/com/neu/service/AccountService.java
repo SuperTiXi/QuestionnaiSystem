@@ -1,7 +1,10 @@
 package com.neu.service;
 
-import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.bean.HttpResponseEntity;
+import com.neu.dao.entity.Account;
 
-@Service
-public class AccountService {
+public interface AccountService extends IService<Account> {
+
+    HttpResponseEntity loginByUserName(String userName,String password);
 }

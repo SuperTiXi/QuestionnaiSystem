@@ -8,3 +8,8 @@ spring:
       password: Root123456
       username: root
       url: jdbc:mysql://rm-bp1k17lb43o44otnsbo.mysql.rds.aliyuncs.com:3306/questionnaire?characterEncoding=utf-8&userSSL=false
+logging:
+  level:
+    com.neu: debug
+  pattern:
+    dateformat: mm:ss.SSS

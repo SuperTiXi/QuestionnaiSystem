@@ -1,11 +1,15 @@
 package com.neu.dao.entity;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
 
     private String id;
@@ -43,4 +47,5 @@ public class Account {
      * 1：使用中
      */
     private int state;
+
 }

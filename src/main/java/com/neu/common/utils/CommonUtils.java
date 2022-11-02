@@ -15,4 +15,11 @@ public class CommonUtils {
         }
         return randomNumStr;
     }
+    /**
+     * 判断是否有空字段
+     */
+
+    public static boolean stringIsEmpty(String str) {
+        return str==null||str.equals("");
+    }
 }

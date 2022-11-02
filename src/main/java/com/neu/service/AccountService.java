@@ -11,4 +11,5 @@ public interface AccountService extends IService<Account> {
     HttpResponseEntity loginByPhone(String phone, String code);
 
     HttpResponseEntity sendCode(String phone);
+    HttpResponseEntity register(Account account);
 }

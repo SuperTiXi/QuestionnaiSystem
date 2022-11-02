@@ -5,8 +5,10 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
+import com.neu.common.utils.CommonUtils;
 import com.neu.common.utils.HttpUtils;
 import com.neu.common.utils.RegexUtils;
+import com.neu.common.utils.UUIDUtil;
 import com.neu.dao.AccountMapper;
 import com.neu.dao.entity.Account;
 import com.neu.service.AccountService;
@@ -14,7 +16,6 @@ import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -137,5 +138,49 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return httpResponseEntity;
     }
 
+    @Override
+    public HttpResponseEntity register(Account body) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+//        检测是否有空字段
+        String userName = body.getUserName();
+        String name = body.getName();
+        Integer identity = body.getIdentity();
+        String phone = body.getPhone();
+        String password = body.getPassword();
+        if (CommonUtils.stringIsEmpty(userName)||CommonUtils.stringIsEmpty(name)
+                ||identity==null||CommonUtils.stringIsEmpty(phone)||CommonUtils.stringIsEmpty(password)){
+            httpResponseEntity.setCode(REGISTER_FAIL_CODE);
+            httpResponseEntity.setMessage(REGISTER_FAIL_EMPTY);
+            return httpResponseEntity;
+        }
 
+//        手机号去重
+        Account account = query().eq("phone", phone).one();
+        if (account!=null) {
+            httpResponseEntity.setCode(REGISTER_FAIL_CODE);
+            httpResponseEntity.setMessage(REGISTER_FAIL_EXIST_PHONE);
+            return httpResponseEntity;
+        }
+//        userName去重
+        account = query().eq("userName", userName).one();
+        if (account!=null) {
+            httpResponseEntity.setCode(REGISTER_FAIL_CODE);
+            httpResponseEntity.setMessage(REGISTER_FAIL_EXIST_USERNAME);
+            return httpResponseEntity;
+        }
+//        ID采用UUID
+        body.setId(UUIDUtil.getOneUUID());
+        body.setState(1);
+
+        boolean flag = save(body);
+        if (flag) {
+            httpResponseEntity.setCode(REGISTER_SUCCESS_CODE);
+            httpResponseEntity.setMessage(REGISTER_SUCCESS_MESSAGE);
+        }else {
+            httpResponseEntity.setCode(REGISTER_FAIL_CODE);
+            httpResponseEntity.setMessage(REGISTER_FAIL_MESSAGE);
+        }
+
+        return httpResponseEntity;
+    }
 }

@@ -19,7 +19,7 @@ public class AccountController {
     }
 
 
-    @RequestMapping(value = "/sendCode",method = RequestMethod.POST,headers = "Accept=application/json")
+    @RequestMapping(value = "/sendCode",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity sendCode(@RequestParam("phone") String phone){
 
         return accountService.sendCode(phone);
@@ -29,5 +29,6 @@ public class AccountController {
 
         return accountService.loginByPhone(phone,code);
     }
+
 
 }

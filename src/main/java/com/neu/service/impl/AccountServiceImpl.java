@@ -147,6 +147,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         Integer identity = body.getIdentity();
         String phone = body.getPhone();
         String password = body.getPassword();
+
         if (CommonUtils.stringIsEmpty(userName)||CommonUtils.stringIsEmpty(name)
                 ||identity==null||CommonUtils.stringIsEmpty(phone)||CommonUtils.stringIsEmpty(password)){
             httpResponseEntity.setCode(REGISTER_FAIL_CODE);
@@ -162,7 +163,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return httpResponseEntity;
         }
 //        userName去重
-        account = query().eq("userName", userName).one();
+        account = query().eq("user_name", userName).one();
         if (account!=null) {
             httpResponseEntity.setCode(REGISTER_FAIL_CODE);
             httpResponseEntity.setMessage(REGISTER_FAIL_EXIST_USERNAME);

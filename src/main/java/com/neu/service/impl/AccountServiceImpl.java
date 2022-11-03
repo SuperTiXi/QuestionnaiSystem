@@ -214,10 +214,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public HttpResponseEntity addTenant(Account account) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
-
+        account.setId(UUIDUtil.getOneUUID());
         account.setState(1);
         account.setIdentity(1);
-
         boolean saveResult = save(account);
         if(!saveResult){
             httpResponseEntity.setCode(INSERT_FAIL_CODE);

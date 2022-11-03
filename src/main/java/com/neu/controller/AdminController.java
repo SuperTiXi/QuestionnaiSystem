@@ -31,7 +31,6 @@ public class AdminController {
      */
     @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept=application/json")
     public HttpResponseEntity addTenant(@RequestBody Account account){
-
         return accountService.addTenant(account);
     }
 

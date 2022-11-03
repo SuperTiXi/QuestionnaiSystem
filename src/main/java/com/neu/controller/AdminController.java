@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
@@ -18,7 +18,7 @@ public class AdminController {
      * @return 查询状态
      * 返回的数据是list类型，我建议使用jQuery中的dataTable插件来实现分页及查询功能
      */
-    @RequestMapping(value = "/list",method = RequestMethod.GET,headers = "Accept = application/json")
+    @RequestMapping(value = "/list",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity queryAllTenant(){
 
         return accountService.queryAllTenant();
@@ -29,7 +29,7 @@ public class AdminController {
      * @param account 填写的信息，包括username，name，password，phone
      * @return  添加状态
      */
-    @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept = application/json")
+    @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept=application/json")
     public HttpResponseEntity addTenant(@RequestBody Account account){
 
         return accountService.addTenant(account);
@@ -41,7 +41,7 @@ public class AdminController {
      * @param phone 手机号
      * @return 状态
      */
-    @RequestMapping(value = "/delete",method = RequestMethod.POST,headers = "Accept = application/json")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST,headers = "Accept=application/json")
     public HttpResponseEntity delete(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
 
         return accountService.delete(userName,phone);
@@ -53,7 +53,7 @@ public class AdminController {
      * @param phone 手机号
      * @return 状态
      */
-    @RequestMapping(value = "/recover",method = RequestMethod.POST,headers = "Accept = application/json")
+    @RequestMapping(value = "/recover",method = RequestMethod.POST,headers = "Accept=application/json")
     public HttpResponseEntity recover(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
 
         return accountService.recover(userName,phone);

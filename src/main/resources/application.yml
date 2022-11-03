@@ -21,6 +21,7 @@ spring:
         time-between-eviction-runs: 10s
   jackson:
     default-property-inclusion: non_null # JSON处理时忽略非空字段
+
 logging:
   level:
     com.neu: debug
@@ -30,4 +31,6 @@ logging:
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
-  type-aliases-package: com.neu.entity # 别名扫描包
+  type-aliases-package: com.neu.dao.entity # 别名扫描包
+
+

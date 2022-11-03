@@ -37,5 +37,22 @@ public class Constants {
 
     public static final String LOGIN_CODE_KEY = "login:code";
     public static final long LOGIN_CODE_TTL = 2L;
+
+    /**
+     * Description:CRUD相关
+     */
+    public static final String QUERY_SUCCESS_CODE = "666";
+    public static final String QUERY_SUCCESS_MESSAGE = "查询成功";
+    public static final String QUERY_FAIL_CODE = "114514";
+    public static final String QUERY_FAIL_MESSAGE = "数据异常";
+    public static final String INSERT_SUCCESS_CODE = "666";
+    public static final String INSERT_SUCCESS_MESSAGE = "添加成功";
+    public static final String INSERT_FAIL_CODE = "114514";
+    public static final String INSERT_FAIL_MESSAGE = "添加失败";
+    public static final String DELETE_SUCCESS_CODE = "666";
+    public static final String DELETE_SUCCESS_MESSAGE = "删除成功";
+    public static final String DELETE_FAIL_CODE = "114514";
+    public static final String DELETE_FAIL_MESSAGE = "删除失败";
+
 }
 

@@ -12,4 +12,10 @@ public interface AccountService extends IService<Account> {
 
     HttpResponseEntity sendCode(String phone);
     HttpResponseEntity register(Account account);
+
+    HttpResponseEntity queryAllTenant();
+
+    HttpResponseEntity addTenant(Account account);
+
+    HttpResponseEntity delete(String userName, String phone);
 }

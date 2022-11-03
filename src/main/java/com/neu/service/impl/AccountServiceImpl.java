@@ -1,8 +1,12 @@
 package com.neu.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.CommonUtils;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -32,7 +37,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public HttpResponseEntity loginByUserName(String userName, String password) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
-        Account account = query().eq("user_name", userName).eq("password", password).one();
+        Account account = query().eq("user_name", userName).eq("password", password).eq("state",1).one();
 
         if(BeanUtil.isEmpty(account)){
             httpResponseEntity.setCode(LOGIN_FAIL_CODE);
@@ -57,7 +62,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         log.error("验证码为"+code);
 
         if (RegexUtils.isPhoneInvalid(phone)) {
-            // 2.如果不符合，返回错误信息
+            // 如果不符合，返回错误信息
             httpResponseEntity.setCode(LOGIN_FAIL_CODE);
             httpResponseEntity.setMessage(PHONE_ERROR);
             return httpResponseEntity;
@@ -108,7 +113,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public HttpResponseEntity loginByPhone(String phone ,String code) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
-        Account account = query().eq("phone", phone).one();
+        Account account = query().eq("phone", phone).eq("state",1).one();
 
         if (RegexUtils.isPhoneInvalid(phone)) {
             httpResponseEntity.setCode(LOGIN_FAIL_CODE);
@@ -116,6 +121,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return httpResponseEntity;
         }
 
+        //从redis中取出验证码
         String redisCode = stringRedisTemplate.opsForValue().get(LOGIN_CODE_KEY + phone);
 
         if(StrUtil.isEmpty(redisCode)){
@@ -183,5 +189,89 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
 
         return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity queryAllTenant() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Account> tenants = query()
+                .eq("identity", 1)
+//                .eq("state",1)
+                .list();
+
+        if(tenants.isEmpty()){
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+        httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setData(tenants);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity addTenant(Account account) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        account.setState(1);
+        account.setIdentity(1);
+
+        boolean saveResult = save(account);
+        if(!saveResult){
+            httpResponseEntity.setCode(INSERT_FAIL_CODE);
+            httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
+        httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity delete(String userName, String phone) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        //使用phone删除
+        if(StrUtil.isBlank(userName)){
+            UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("phone",phone);
+            updateWrapper.set("state",0);
+
+            boolean update = update(updateWrapper);
+
+
+            if(!update){
+                httpResponseEntity.setCode(DELETE_FAIL_CODE);
+                httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
+                return httpResponseEntity;
+            }
+
+            httpResponseEntity.setCode(DELETE_SUCCESS_CODE);
+            httpResponseEntity.setMessage(DELETE_SUCCESS_MESSAGE);
+            return httpResponseEntity;
+        }
+        else {
+            //使用userName删除
+            UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("user_name",userName);
+            updateWrapper.set("state",0);
+
+            boolean update = update(updateWrapper);
+
+
+            if(!update){
+                httpResponseEntity.setCode(DELETE_FAIL_CODE);
+                httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
+                return httpResponseEntity;
+            }
+
+            httpResponseEntity.setCode(DELETE_SUCCESS_CODE);
+            httpResponseEntity.setMessage(DELETE_SUCCESS_MESSAGE);
+            return httpResponseEntity;
+        }
     }
 }

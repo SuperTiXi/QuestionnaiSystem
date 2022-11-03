@@ -41,9 +41,21 @@ public class AdminController {
      * @param phone 手机号
      * @return 状态
      */
-    @RequestMapping(value = "/delete",method = RequestMethod.DELETE,headers = "Accept = application/json")
+    @RequestMapping(value = "/delete",method = RequestMethod.POST,headers = "Accept = application/json")
     public HttpResponseEntity delete(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
 
         return accountService.delete(userName,phone);
+    }
+
+    /**
+     * 启用租户账户
+     * @param userName 账户名
+     * @param phone 手机号
+     * @return 状态
+     */
+    @RequestMapping(value = "/recover",method = RequestMethod.POST,headers = "Accept = application/json")
+    public HttpResponseEntity recover(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
+
+        return accountService.recover(userName,phone);
     }
 }

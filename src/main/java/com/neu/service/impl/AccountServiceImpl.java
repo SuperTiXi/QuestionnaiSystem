@@ -4,15 +4,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
-import com.neu.common.utils.CommonUtils;
-import com.neu.common.utils.HttpUtils;
-import com.neu.common.utils.RegexUtils;
-import com.neu.common.utils.UUIDUtil;
+import com.neu.common.utils.*;
 import com.neu.dao.AccountMapper;
 import com.neu.dao.entity.Account;
 import com.neu.service.AccountService;
@@ -153,9 +152,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         Integer identity = body.getIdentity();
         String phone = body.getPhone();
         String password = body.getPassword();
-
+        String info = body.getInfo();//密保问题，用json字符串传过来
         if (CommonUtils.stringIsEmpty(userName)||CommonUtils.stringIsEmpty(name)
-                ||identity==null||CommonUtils.stringIsEmpty(phone)||CommonUtils.stringIsEmpty(password)){
+                ||identity==null||CommonUtils.stringIsEmpty(phone)||CommonUtils.stringIsEmpty(password)||CommonUtils.stringIsEmpty(info)){
             httpResponseEntity.setCode(REGISTER_FAIL_CODE);
             httpResponseEntity.setMessage(REGISTER_FAIL_EMPTY);
             return httpResponseEntity;
@@ -234,44 +233,78 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public HttpResponseEntity delete(String userName, String phone) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
+        //使用phone修改状态
+        if(StrUtil.isBlank(userName)) {
 
-        //使用phone删除
-        if(StrUtil.isBlank(userName)){
-            UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("phone",phone);
-            updateWrapper.set("state",0);
-
-            boolean update = update(updateWrapper);
-
-
-            if(!update){
-                httpResponseEntity.setCode(DELETE_FAIL_CODE);
-                httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
-                return httpResponseEntity;
-            }
-
-            httpResponseEntity.setCode(DELETE_SUCCESS_CODE);
-            httpResponseEntity.setMessage(DELETE_SUCCESS_MESSAGE);
-            return httpResponseEntity;
-        }
-        else {
-            //使用userName删除
-            UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("phone", phone);
+            updateWrapper.set("state", 0);
+        } else {
+            //使用userName修改状态
             updateWrapper.eq("user_name",userName);
             updateWrapper.set("state",0);
 
-            boolean update = update(updateWrapper);
-
-
-            if(!update){
-                httpResponseEntity.setCode(DELETE_FAIL_CODE);
-                httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
-                return httpResponseEntity;
-            }
-
-            httpResponseEntity.setCode(DELETE_SUCCESS_CODE);
-            httpResponseEntity.setMessage(DELETE_SUCCESS_MESSAGE);
+        }
+        boolean update = update(updateWrapper);
+        if(!update){
+            httpResponseEntity.setCode(DELETE_FAIL_CODE);
+            httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
             return httpResponseEntity;
         }
+
+        httpResponseEntity.setCode(DELETE_SUCCESS_CODE);
+        httpResponseEntity.setMessage(DELETE_SUCCESS_MESSAGE);
+        return httpResponseEntity;
     }
+
+    @Override
+    public HttpResponseEntity recover(String userName, String phone) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
+        //使用phone修改状态
+        if(StrUtil.isBlank(userName)) {
+            updateWrapper.eq("phone", phone);
+            updateWrapper.set("state", 1);
+        } else {
+            //使用userName修改状态
+            updateWrapper.eq("user_name",userName);
+            updateWrapper.set("state",1);
+
+        }
+        boolean update = update(updateWrapper);
+
+        httpResponseEntity.setCode(update?RECOVER_SUCCESS_CODE:RECOVER_FAIL_CODE);
+        httpResponseEntity.setMessage(update?RECOVER_SUCCESS_MESSAGE:RECOVER_FAIL_MESSAGE);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity securityQuestions(String userName) {
+        Account account = query().eq("user_name", userName).one();
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        if (account==null) {
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+        httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
+        JSONObject securityQuestions = (JSONObject) JSON.parse(account.getInfo());
+        if (securityQuestions==null) {
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+        System.out.println(securityQuestions);
+        Map<String, String> map = JsonUtils.jsonToMAp(securityQuestions);
+        httpResponseEntity.setData(map);
+        return httpResponseEntity;
+    }
+
+//    @Override
+//    public HttpResponseEntity answerSecurityQuestions(Map<String, String> answers) {
+//
+//    }
 }

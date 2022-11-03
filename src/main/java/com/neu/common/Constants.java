@@ -52,7 +52,10 @@ public class Constants {
     public static final String DELETE_SUCCESS_CODE = "666";
     public static final String DELETE_SUCCESS_MESSAGE = "删除成功";
     public static final String DELETE_FAIL_CODE = "114514";
-    public static final String DELETE_FAIL_MESSAGE = "删除失败";
-
+    public static final String DELETE_FAIL_MESSAGE = "启用失败";
+    public static final String RECOVER_SUCCESS_CODE = "666";
+    public static final String RECOVER_SUCCESS_MESSAGE = "启用成功";
+    public static final String RECOVER_FAIL_CODE = "114514";
+    public static final String RECOVER_FAIL_MESSAGE = "启用失败";
 }
 

@@ -72,16 +72,16 @@ public class AccountController {
         HttpResponseEntity httpResponseEntity = accountService.securityQuestions(userName);
         Map<String, String> map = (Map<String, String>) httpResponseEntity.getData();
 
-        String infoKey = QUESTION_ANSWER_KEY + userName;
+        String infoKey = QUESTION_ANSWER_KEY;
         stringRedisTemplate.opsForHash().putAll(infoKey,map);
+
         return httpResponseEntity;
     }
     @RequestMapping(value = "/answerSecurityQuestions",method = RequestMethod.POST, headers = "Accept=application/json")
     public  HttpResponseEntity answerSecurityQuestions(@RequestBody Map<String, String> answers) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
 
-        String userName = answers.get("userName");
-        Map<Object, Object> map =stringRedisTemplate.opsForHash().entries(QUESTION_ANSWER_KEY + userName);
+        Map<Object, Object> map =stringRedisTemplate.opsForHash().entries(QUESTION_ANSWER_KEY);
         if (map==null) {
             httpResponseEntity.setCode(Constants.QUERY_FAIL_CODE);
             httpResponseEntity.setMessage(Constants.QUERY_FAIL_MESSAGE);

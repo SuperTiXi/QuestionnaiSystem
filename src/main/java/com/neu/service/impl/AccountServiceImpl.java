@@ -291,6 +291,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
         httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
         JSONObject securityQuestions = (JSONObject) JSON.parse(account.getInfo());
+
         if (securityQuestions==null) {
             httpResponseEntity.setCode(QUERY_FAIL_CODE);
             httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);

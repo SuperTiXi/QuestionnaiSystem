@@ -72,12 +72,14 @@ public class AccountController {
     @RequestMapping(value = "/answerSecurityQuestions",method = RequestMethod.POST, headers = "Accept=application/json")
     public  HttpResponseEntity answerSecurityQuestions(@RequestBody Map<String, String> answers) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
         if (map==null) {
             httpResponseEntity.setCode(Constants.QUERY_FAIL_CODE);
             httpResponseEntity.setMessage(Constants.QUERY_FAIL_MESSAGE);
             httpResponseEntity.setData(false);
             return httpResponseEntity;
         }
+
         for (String key: answers.keySet()) {
             if (!map.containsKey(key)||!map.get(key).equals(answers.get(key))) {
                 httpResponseEntity.setCode(Constants.QUERY_FAIL_CODE);
@@ -86,6 +88,7 @@ public class AccountController {
                 return httpResponseEntity;
             }
         }
+
         httpResponseEntity.setCode(Constants.QUERY_SUCCESS_CODE);
         httpResponseEntity.setMessage(Constants.QUERY_SUCCESS_MESSAGE);
         httpResponseEntity.setData(true);

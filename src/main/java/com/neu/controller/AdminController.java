@@ -57,4 +57,10 @@ public class AdminController {
 
         return accountService.recover(userName,phone);
     }
+
+    @RequestMapping(value = "/modify",method = RequestMethod.POST,headers = "Accept=application/json")
+    public HttpResponseEntity modify(@RequestBody Account account){
+
+        return accountService.modify(account);
+    }
 }

@@ -1,14 +1,11 @@
 package com.neu.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.QueryChainWrapper;
-import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.*;
@@ -303,8 +300,24 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return httpResponseEntity;
     }
 
-//    @Override
-//    public HttpResponseEntity answerSecurityQuestions(Map<String, String> answers) {
-//
-//    }
+    @Override
+    public HttpResponseEntity modify(Account account) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("user_name",account.getUserName());
+        boolean update = update(account, updateWrapper);
+
+        if(!update){
+            httpResponseEntity.setCode(MODIFY_FAIL_CODE);
+            httpResponseEntity.setMessage(MODIFY_FAIL_MESSAGE);
+
+            return  httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(MODIFY_SUCCESS_CODE);
+        httpResponseEntity.setMessage(MODIFY_SUCCESS_MESSAGE);
+        return httpResponseEntity;
+    }
+
 }

@@ -39,7 +39,7 @@ public class TenantController {
     }
 
     /**
-     * 停用租户账户
+     * 停用用户账户
      * @param userName 账户名
      * @param phone 手机号
      * @return 状态
@@ -51,7 +51,7 @@ public class TenantController {
     }
 
     /**
-     * 启用租户账户
+     * 启用用户账户
      * @param userName 账户名
      * @param phone 手机号
      * @return 状态
@@ -63,7 +63,7 @@ public class TenantController {
     }
 
     /**
-     * 修改租户信息
+     * 修改用户信息
      * @param account 修改后的租户信息，要求：userName不能改
      * @return 修改状态
      */

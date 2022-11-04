@@ -29,5 +29,7 @@ public interface AccountService extends IService<Account> {
 
     HttpResponseEntity addUser(Account account, String tenantId);
 
+    HttpResponseEntity queryAllGroup(String userId);
+
 //    HttpResponseEntity answerSecurityQuestions(Map<String, String> answers);
 }

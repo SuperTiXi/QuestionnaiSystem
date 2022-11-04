@@ -5,15 +5,20 @@ import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.*;
 import com.neu.dao.AccountMapper;
 import com.neu.dao.TenantToUserMapper;
+import com.neu.dao.UserToGroupMapper;
 import com.neu.dao.entity.Account;
+import com.neu.dao.entity.Group;
 import com.neu.dao.entity.TenantToUser;
+import com.neu.dao.entity.UserToGroup;
 import com.neu.service.AccountService;
+import com.neu.service.GroupService;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -37,6 +42,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Autowired
     TenantToUserMapper tenantToUserMapper;
 
+    @Autowired
+    UserToGroupMapper userToGroupMapper;
+
+    @Autowired
+    GroupService groupService;
     @Override
     public HttpResponseEntity loginByUserName(String userName, String password) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
@@ -394,6 +404,36 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
 
         return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity queryAllGroup(String userId) {
+
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        List<String> groupIds = userToGroupMapper.queryGroupByUser(userId);
+        if(groupIds.isEmpty()){
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
+
+            return httpResponseEntity;
+        }
+
+        List<Group> groups = new ArrayList<>();
+        for(String groupId : groupIds){
+            if(!StrUtil.isBlank(userId)){
+                Group group = groupService.query().eq("group_id", groupId).one();
+                groups.add(group);
+            }
+
+        }
+
+        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+        httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setData(groups);
+
+        return httpResponseEntity;
+
     }
 
 }

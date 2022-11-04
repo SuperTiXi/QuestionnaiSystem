@@ -3,6 +3,8 @@ package com.neu.common;
 
 public class Constants {
 
+    public static final String EMPTY_ERROR = "空值异常";
+
     /**
      * Description:登录状态
      */
@@ -11,6 +13,8 @@ public class Constants {
     public static final String LOGIN_FAIL_CODE = "401";
     public static final String LOGIN_FAIL_MESSAGE = "登录失败";
     public static final String PHONE_ERROR = "手机号格式错误";
+//    未登录状态
+    public static final String NOT_LOGIN="333";
     /**
      * Description:注册状态
      */

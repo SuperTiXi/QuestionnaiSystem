@@ -33,6 +33,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public HttpResponseEntity loginByUserName(String userName, String password) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        if (CommonUtils.stringIsEmpty(userName)||CommonUtils.stringIsEmpty(password)) {
+            httpResponseEntity.setCode(LOGIN_FAIL_CODE);
+            httpResponseEntity.setMessage(EMPTY_ERROR);
+            return httpResponseEntity;
+        }
         Account account = query().eq("user_name", userName).eq("password", password).eq("state",1).one();
 
         if(BeanUtil.isEmpty(account)){
@@ -109,6 +114,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public HttpResponseEntity loginByPhone(String phone ,String code) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        if (CommonUtils.stringIsEmpty(phone)||CommonUtils.stringIsEmpty(code)) {
+            httpResponseEntity.setCode(LOGIN_FAIL_CODE);
+            httpResponseEntity.setMessage(EMPTY_ERROR);
+            return httpResponseEntity;
+        }
         Account account = query().eq("phone", phone).eq("state",1).one();
 
         if (RegexUtils.isPhoneInvalid(phone)) {

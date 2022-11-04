@@ -23,7 +23,9 @@ public class Questionnaire {
      * 问题类型：诸如数学，社会，政治之类
      */
     private String type;
-
+    /**
+     * 存储的是question的id
+     */
     private String info;
 
     private String creatorId;

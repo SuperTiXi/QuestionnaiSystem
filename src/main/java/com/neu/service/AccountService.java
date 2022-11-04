@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.dao.entity.Account;
 
-import java.util.Map;
-
 public interface AccountService extends IService<Account> {
 
     HttpResponseEntity loginByUserName(String userName,String password);
@@ -27,9 +25,9 @@ public interface AccountService extends IService<Account> {
 
     HttpResponseEntity modify(Account account);
 
-    HttpResponseEntity queryAllUser();
+    HttpResponseEntity queryAllUser(String tenantId);
 
-    HttpResponseEntity addUser(Account account);
+    HttpResponseEntity addUser(Account account, String tenantId);
 
 //    HttpResponseEntity answerSecurityQuestions(Map<String, String> answers);
 }

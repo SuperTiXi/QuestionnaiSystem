@@ -6,6 +6,9 @@ import com.neu.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 由管理员对租户进行管理
+ */
 @RestController
 @RequestMapping("/admin")
 public class AdminController {

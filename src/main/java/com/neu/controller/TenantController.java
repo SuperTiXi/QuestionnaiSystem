@@ -6,6 +6,9 @@ import com.neu.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 租户对用户进行管理
+ */
 @RestController
 @RequestMapping("/tenant")
 public class TenantController {
@@ -15,12 +18,13 @@ public class TenantController {
 
     /**
      * 查询用户列表
+     * @param tenantId 该租户id
      * @return 返回list类型
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET,headers = "Accept=Application/json")
-    public HttpResponseEntity queryAllUser(){
+    public HttpResponseEntity queryAllUser(@RequestParam("tenantId") String tenantId){
 
-        return accountService.queryAllUser();
+        return accountService.queryAllUser(tenantId);
     }
 
     /**
@@ -29,9 +33,9 @@ public class TenantController {
      * @return 添加状态
      */
     @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept=Application/json")
-    public HttpResponseEntity addUser(@RequestBody Account account){
+    public HttpResponseEntity addUser(@RequestBody Account account,@RequestParam("tenantId") String tenantId){
 
-        return accountService.addUser(account);
+        return accountService.addUser(account,tenantId);
     }
 
     /**

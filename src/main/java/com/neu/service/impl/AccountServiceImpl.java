@@ -10,12 +10,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.*;
 import com.neu.dao.AccountMapper;
+import com.neu.dao.TenantToUserMapper;
 import com.neu.dao.entity.Account;
+import com.neu.dao.entity.TenantToUser;
 import com.neu.service.AccountService;
 import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +33,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    TenantToUserMapper tenantToUserMapper;
 
     @Override
     public HttpResponseEntity loginByUserName(String userName, String password) {
@@ -337,32 +344,44 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    public HttpResponseEntity queryAllUser() {
+    public HttpResponseEntity queryAllUser(String tenantId) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
 
-        List<Account> users = query().eq("identity", 2).list();
+        List<String> userIds = tenantToUserMapper.queryUserByTenant(tenantId);
 
-        if(users.isEmpty()){
+        if(userIds.isEmpty()){
             httpResponseEntity.setCode(QUERY_FAIL_CODE);
             httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
 
             return httpResponseEntity;
         }
+        List<Account> accounts = new ArrayList<>();
+        for(String userId : userIds){
+            if(!StrUtil.isBlank(userId)){
+                Account one = query().eq("id", userId).one();
+                accounts.add(one);
+            }
+
+        }
+
         httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
         httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
-        httpResponseEntity.setData(users);
+        httpResponseEntity.setData(accounts);
 
         return httpResponseEntity;
     }
 
     @Override
-    public HttpResponseEntity addUser(Account account) {
+    public HttpResponseEntity addUser(Account account, String tenantId) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         account.setId(UUIDUtil.getOneUUID());
+        TenantToUser tenantToUser = new TenantToUser(tenantId, account.getId());
+        tenantToUserMapper.insert(tenantToUser);
         account.setState(1);
         account.setIdentity(2);
 
         try {
+
             save(account);
         } catch (Exception e) {
 

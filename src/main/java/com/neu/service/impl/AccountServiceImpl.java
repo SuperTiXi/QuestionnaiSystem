@@ -214,8 +214,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         account.setId(UUIDUtil.getOneUUID());
         account.setState(1);
         account.setIdentity(1);
-        boolean saveResult = save(account);
-        if(!saveResult){
+
+        try {
+
+            save(account);
+        } catch (Exception e) {
+
             httpResponseEntity.setCode(INSERT_FAIL_CODE);
             httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
             return httpResponseEntity;
@@ -300,6 +304,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return httpResponseEntity;
     }
 
+
+
     @Override
     public HttpResponseEntity modify(Account account) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
@@ -317,6 +323,47 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         httpResponseEntity.setCode(MODIFY_SUCCESS_CODE);
         httpResponseEntity.setMessage(MODIFY_SUCCESS_MESSAGE);
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity queryAllUser() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        List<Account> users = query().eq("identity", 2).list();
+
+        if(users.isEmpty()){
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
+
+            return httpResponseEntity;
+        }
+        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+        httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setData(users);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity addUser(Account account) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        account.setId(UUIDUtil.getOneUUID());
+        account.setState(1);
+        account.setIdentity(2);
+
+        try {
+            save(account);
+        } catch (Exception e) {
+
+            httpResponseEntity.setCode(INSERT_FAIL_CODE);
+            httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
+        httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
+
         return httpResponseEntity;
     }
 

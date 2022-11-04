@@ -15,7 +15,7 @@ import static com.neu.common.Constants.QUESTION_ANSWER_KEY;
 
 @RestController
 @RequestMapping("/account")
-public class AccountController {
+public class LoginController {
 
     @Autowired
     AccountService accountService;
@@ -67,6 +67,11 @@ public class AccountController {
         return accountService.register(BeanUtil.fillBeanWithMap(body, new Account(),true));
     }
 
+    /**
+     * 读取密保问题到内存中
+     * @param userName 根据用户名读取密保问题
+     * @return 读取状态
+     */
     @RequestMapping(value = "/securityQuestions",method = RequestMethod.GET, headers = "Accept=application/json")
     public HttpResponseEntity securityQuestions(@RequestParam("userName") String userName) {
         HttpResponseEntity httpResponseEntity = accountService.securityQuestions(userName);
@@ -77,6 +82,12 @@ public class AccountController {
 
         return httpResponseEntity;
     }
+
+    /**
+     * 回答密保问题
+     * @param answers 回答密保问题的信息
+     * @return 是否正确
+     */
     @RequestMapping(value = "/answerSecurityQuestions",method = RequestMethod.POST, headers = "Accept=application/json")
     public  HttpResponseEntity answerSecurityQuestions(@RequestBody Map<String, String> answers) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();

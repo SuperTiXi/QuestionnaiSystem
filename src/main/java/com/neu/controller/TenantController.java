@@ -7,31 +7,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/tenant")
+public class TenantController {
 
     @Autowired
     private AccountService accountService;
 
     /**
-     * 查询数据库中的租户
-     * @return 查询状态
-     * 返回的数据是list类型，我建议使用jQuery中的dataTable插件来实现分页及查询功能
+     * 查询用户列表
+     * @return 返回list类型
      */
-    @RequestMapping(value = "/list",method = RequestMethod.GET,headers = "Accept=application/json")
-    public HttpResponseEntity queryAllTenant(){
+    @RequestMapping(value = "/list",method = RequestMethod.GET,headers = "Accept=Application/json")
+    public HttpResponseEntity queryAllUser(){
 
-        return accountService.queryAllTenant();
+        return accountService.queryAllUser();
     }
 
     /**
-     * 管理员添加用户
-     * @param account 填写的信息，包括username，name，password，phone
-     * @return  添加状态
+     * 添加用户
+     * @param account 需要填写userName,name,phone,password
+     * @return 添加状态
      */
-    @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept=application/json")
-    public HttpResponseEntity addTenant(@RequestBody Account account){
-        return accountService.addTenant(account);
+    @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept=Application/json")
+    public HttpResponseEntity addUser(@RequestBody Account account){
+
+        return accountService.addUser(account);
     }
 
     /**

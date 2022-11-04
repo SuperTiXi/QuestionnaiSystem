@@ -27,5 +27,9 @@ public interface AccountService extends IService<Account> {
 
     HttpResponseEntity modify(Account account);
 
+    HttpResponseEntity queryAllUser();
+
+    HttpResponseEntity addUser(Account account);
+
 //    HttpResponseEntity answerSecurityQuestions(Map<String, String> answers);
 }

@@ -15,5 +15,6 @@ public interface TenantToUserMapper extends BaseMapper<TenantToUser> {
     @Select("SELECT user_id FROM tenant_user WHERE tenant_id = #{tenantId}")
     List<String> queryUserByTenant(@Param("tenantId") String tenantId);
 
-
+    @Select("SELECT tenant_id FROM tenant_user WHERE user_id = #{userId}")
+    String queryTenantByUser(@Param("userId") String userId);
 }

@@ -1,6 +1,7 @@
 package com.neu.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -404,36 +405,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
 
         return httpResponseEntity;
-    }
-
-    @Override
-    public HttpResponseEntity queryAllGroup(String userId) {
-
-        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
-
-        List<String> groupIds = userToGroupMapper.queryGroupByUser(userId);
-        if(groupIds.isEmpty()){
-            httpResponseEntity.setCode(QUERY_FAIL_CODE);
-            httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
-
-            return httpResponseEntity;
-        }
-
-        List<Group> groups = new ArrayList<>();
-        for(String groupId : groupIds){
-            if(!StrUtil.isBlank(userId)){
-                Group group = groupService.query().eq("group_id", groupId).one();
-                groups.add(group);
-            }
-
-        }
-
-        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
-        httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
-        httpResponseEntity.setData(groups);
-
-        return httpResponseEntity;
-
     }
 
 }

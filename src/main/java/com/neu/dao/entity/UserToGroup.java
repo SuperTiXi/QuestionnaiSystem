@@ -19,5 +19,5 @@ public class UserToGroup {
      * 1.可用
      * 0.不可用
      */
-    private int valid;
+
 }

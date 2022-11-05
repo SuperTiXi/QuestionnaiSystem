@@ -3,6 +3,7 @@ package com.neu.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.dao.entity.Account;
+import com.neu.dao.entity.Group;
 
 public interface AccountService extends IService<Account> {
 
@@ -29,7 +30,6 @@ public interface AccountService extends IService<Account> {
 
     HttpResponseEntity addUser(Account account, String tenantId);
 
-    HttpResponseEntity queryAllGroup(String userId);
 
-//    HttpResponseEntity answerSecurityQuestions(Map<String, String> answers);
+
 }

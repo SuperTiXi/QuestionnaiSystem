@@ -12,6 +12,7 @@ public interface AccountService extends IService<Account> {
     HttpResponseEntity loginByPhone(String phone, String code);
 
     HttpResponseEntity sendCode(String phone);
+    
     HttpResponseEntity register(Account account);
 
     HttpResponseEntity queryAllTenant();
@@ -31,5 +32,8 @@ public interface AccountService extends IService<Account> {
     HttpResponseEntity addUser(Account account, String tenantId);
 
 
+    HttpResponseEntity queryAllAnswerer(String groupId);
 
+
+    HttpResponseEntity addAnswerer(Account answerer);
 }

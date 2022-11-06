@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.*;
 import com.neu.dao.AccountMapper;
+import com.neu.dao.GroupToAnswererMapper;
 import com.neu.dao.TenantToUserMapper;
 import com.neu.dao.UserToGroupMapper;
 import com.neu.dao.entity.Account;
@@ -38,16 +39,13 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
 
     @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
+    StringRedisTemplate stringRedisTemplate;
     @Autowired
     TenantToUserMapper tenantToUserMapper;
-
     @Autowired
     UserToGroupMapper userToGroupMapper;
-
     @Autowired
-    GroupService groupService;
+    GroupToAnswererMapper groupToAnswererMapper;
     @Override
     public HttpResponseEntity loginByUserName(String userName, String password) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
@@ -394,6 +392,60 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         try {
 
             save(account);
+        } catch (Exception e) {
+
+            httpResponseEntity.setCode(INSERT_FAIL_CODE);
+            httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
+        httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity queryAllAnswerer(String groupId) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<String> answerer = groupToAnswererMapper.getAnswererByGroup(groupId);
+
+        if(answerer.isEmpty()){
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
+
+            return httpResponseEntity;
+        }
+
+        List<Account> accounts= new ArrayList<>();
+        for(String answererId : answerer){
+            if(!StrUtil.isBlank(answererId)){
+                Account account = query().eq("id", answererId).one();
+                accounts.add(account);
+            }
+
+        }
+
+        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+        httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setData(accounts);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity addAnswerer(Account answerer) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        answerer.setId(UUIDUtil.getOneUUID());
+
+        answerer.setState(1);
+
+        answerer.setIdentity(3);
+
+        try {
+
+            save(answerer);
         } catch (Exception e) {
 
             httpResponseEntity.setCode(INSERT_FAIL_CODE);

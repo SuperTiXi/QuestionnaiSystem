@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.UUIDUtil;
 import com.neu.dao.GroupMapper;
+import com.neu.dao.GroupToAnswererMapper;
 import com.neu.dao.TenantToUserMapper;
 import com.neu.dao.UserToGroupMapper;
 import com.neu.dao.entity.Account;
 import com.neu.dao.entity.Group;
+import com.neu.dao.entity.GroupToAnswerer;
 import com.neu.dao.entity.UserToGroup;
 import com.neu.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,10 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
     @Autowired
     TenantToUserMapper tenantToUserMapper;
+
+    @Autowired
+    GroupToAnswererMapper groupToAnswererMapper;
+
     @Override
     public HttpResponseEntity queryAllGroup(String userId) {
 
@@ -153,6 +159,45 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
         httpResponseEntity.setCode(MODIFY_SUCCESS_CODE);
         httpResponseEntity.setMessage(MODIFY_SUCCESS_MESSAGE);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity addAnswererToGroup(String answererId, String groupId) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        GroupToAnswerer groupToAnswerer = new GroupToAnswerer(groupId, answererId);
+        try {
+
+            groupToAnswererMapper.insert(groupToAnswerer);
+        } catch (Exception e) {
+
+            httpResponseEntity.setCode(INSERT_FAIL_CODE);
+            httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
+        httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity removeAnswererFromGroup(String answererId, String groupId) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        try {
+            groupToAnswererMapper.removeAnswererFromGroup(answererId, groupId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            httpResponseEntity.setCode(DELETE_FAIL_CODE);
+            httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(DELETE_SUCCESS_CODE);
+        httpResponseEntity.setMessage(DELETE_SUCCESS_MESSAGE);
 
         return httpResponseEntity;
     }

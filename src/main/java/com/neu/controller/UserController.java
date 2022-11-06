@@ -1,7 +1,6 @@
 package com.neu.controller;
 
 import com.neu.bean.HttpResponseEntity;
-import com.neu.dao.entity.Account;
 import com.neu.dao.entity.Group;
 import com.neu.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;

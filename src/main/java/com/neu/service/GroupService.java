@@ -15,4 +15,8 @@ public interface GroupService extends IService<Group> {
     HttpResponseEntity recover(String groupId);
 
     HttpResponseEntity modify(Group group);
+
+    HttpResponseEntity addAnswererToGroup(String answererId, String groupId);
+
+    HttpResponseEntity removeAnswererFromGroup(String answererId, String groupId);
 }

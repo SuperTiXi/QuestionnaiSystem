@@ -67,5 +67,6 @@ public class Constants {
     public static final String MODIFY_SUCCESS_MESSAGE = "修改成功";
     public static final String MODIFY_FAIL_CODE = "114514";
     public static final String MODIFY_FAIL_MESSAGE = "修改失败";
+
 }
 

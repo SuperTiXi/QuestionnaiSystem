@@ -24,7 +24,7 @@ public class Questionnaire {
      */
     private String type;
     /**
-     * 存储的是question的id
+     * 存储的是question的id,以逗号分隔
      */
     private String info;
 

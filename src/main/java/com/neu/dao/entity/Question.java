@@ -19,7 +19,7 @@ public class Question {
     private String userId;
 
     /**
-     * 问题信息
+     * 问题信息，包括题型和题目信息
      */
     private String info;
 

@@ -1,6 +1,7 @@
 package com.neu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.CommonUtils;
@@ -23,7 +24,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper,Question> im
     QuestionMapper questionMapper;
     final String[] cols = {"type", "user_id"};
     @Override
-    public HttpResponseEntity saveOrUpdateQuestion(Question question) {
+    public HttpResponseEntity addQuestion(Question question) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         String id = question.getId(),user_id = question.getUserId(), info = question.getInfo(),type = question.getType();
         if (CommonUtils.stringIsEmpty(user_id)||CommonUtils.stringIsEmpty(info)||CommonUtils.stringIsEmpty(type)) {
@@ -31,11 +32,11 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper,Question> im
             httpResponseEntity.setMessage(EMPTY_ERROR);
             return httpResponseEntity;
         }
-        if (CommonUtils.stringIsEmpty(id)) {
-            id = UUIDUtil.getOneUUID();
-        }
+
+        id = UUIDUtil.getOneUUID();
+
         try {
-            saveOrUpdate(question);
+            save(question);
             httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
             httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
         } catch (Exception e) {
@@ -69,6 +70,23 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper,Question> im
     }
 
     @Override
+    public HttpResponseEntity modifyQuestion(Question question) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        UpdateWrapper<Question> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",question.getId());
+
+        boolean update = update(question, updateWrapper);
+        if(!update){
+            httpResponseEntity.setCode(MODIFY_FAIL_CODE);
+            httpResponseEntity.setMessage(MODIFY_FAIL_MESSAGE);
+            return  httpResponseEntity;
+        }
+        httpResponseEntity.setCode(MODIFY_SUCCESS_CODE);
+        httpResponseEntity.setMessage(MODIFY_SUCCESS_MESSAGE);
+        return httpResponseEntity;
+    }
+
+    @Override
     public HttpResponseEntity queryQuestions(Map<String, String> map) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         QueryWrapper<Question> wrapper = new QueryWrapper<>();
@@ -90,5 +108,6 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper,Question> im
         httpResponseEntity.setData(list);
         return httpResponseEntity;
     }
+
 
 }

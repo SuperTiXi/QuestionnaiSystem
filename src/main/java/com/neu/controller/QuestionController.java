@@ -14,9 +14,14 @@ import java.util.Map;
 public class QuestionController {
     @Autowired
     QuestionService questionService;
-    @RequestMapping(value = "/saveOrUpdateQuestion",method = RequestMethod.POST, headers = "Accept=application/json")
-    public HttpResponseEntity saveOrUpdateQuestion(@RequestBody Question question) {
-        return questionService.saveOrUpdateQuestion(question);
+    @RequestMapping(value = "/addQuestion",method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity addQuestion(@RequestBody Question question) {
+        return questionService.addQuestion(question);
+    }
+
+    @RequestMapping(value = "/modifyQuestion",method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity modifyQuestion(@RequestBody Question question) {
+        return questionService.modifyQuestion(question);
     }
 
     @RequestMapping(value = "/deleteQuestion",method = RequestMethod.POST, headers = "Accept=application/json")

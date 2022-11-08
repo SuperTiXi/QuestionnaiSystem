@@ -72,4 +72,16 @@ public class TenantController {
 
         return accountService.modify(account);
     }
+
+    /**
+     * 租户进行支付
+     * @param tenantId 租户id
+     * @param money 付款数目
+     * @return 付款状态
+     */
+    @RequestMapping(value = "/pay",method = RequestMethod.POST,headers = "Accept=application/json")
+    public HttpResponseEntity pay(@RequestParam("tenantId") String tenantId,@RequestParam("money") double money){
+
+        return accountService.pay(tenantId,money);
+    }
 }

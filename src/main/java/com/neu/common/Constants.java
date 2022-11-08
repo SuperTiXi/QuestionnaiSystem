@@ -68,5 +68,15 @@ public class Constants {
     public static final String MODIFY_FAIL_CODE = "114514";
     public static final String MODIFY_FAIL_MESSAGE = "修改失败";
 
+    /**
+     * Description:计费相关
+     */
+    public static final double EXPENSE_PER_GROUP = 1;
+    public static final double EXPENSE_PER_QUESTIONNAIRE = 0.5;
+    public static final double EXPENSE_PER_ANSWER = 0.1;
+    public static final String PAY_SUCCESS_CODE = "666";
+    public static final String PAY_SUCCESS_MESSAGE = "支付成功";
+    public static final String PAY_FAIL_CODE = "114514";
+    public static final String PAY_FAIL_MESSAGE = "余额不足";
 }
 

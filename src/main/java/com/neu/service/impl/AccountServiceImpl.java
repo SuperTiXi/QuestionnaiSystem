@@ -1,27 +1,22 @@
 package com.neu.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.utils.*;
-import com.neu.dao.AccountMapper;
-import com.neu.dao.GroupToAnswererMapper;
-import com.neu.dao.TenantToUserMapper;
-import com.neu.dao.UserToGroupMapper;
+import com.neu.dao.*;
 import com.neu.dao.entity.Account;
-import com.neu.dao.entity.Group;
+import com.neu.dao.entity.Charging;
+import com.neu.dao.entity.ReleasedQuestionnaire;
 import com.neu.dao.entity.TenantToUser;
-import com.neu.dao.entity.UserToGroup;
 import com.neu.service.AccountService;
-import com.neu.service.GroupService;
 import org.apache.http.HttpResponse;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -46,6 +41,10 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     UserToGroupMapper userToGroupMapper;
     @Autowired
     GroupToAnswererMapper groupToAnswererMapper;
+
+    @Autowired
+    ChargingMapper chargingMapper;
+
     @Override
     public HttpResponseEntity loginByUserName(String userName, String password) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
@@ -167,7 +166,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    public HttpResponseEntity register(Account body) {
+    public HttpResponseEntity register(@NotNull Account body) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
 //        检测是否有空字段
         String userName = body.getUserName();
@@ -235,11 +234,14 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    public HttpResponseEntity addTenant(Account account) {
+    public HttpResponseEntity addTenant(@NotNull Account account) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         account.setId(UUIDUtil.getOneUUID());
         account.setState(1);
         account.setIdentity(1);
+
+        Charging charging = new Charging(account.getId(),0,0,0,0,0);
+        chargingMapper.insert(charging);
 
         try {
 
@@ -333,7 +335,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
 
     @Override
-    public HttpResponseEntity modify(Account account) {
+    public HttpResponseEntity modify(@NotNull Account account) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
 
         UpdateWrapper<Account> updateWrapper = new UpdateWrapper<>();
@@ -381,7 +383,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    public HttpResponseEntity addUser(Account account, String tenantId) {
+    public HttpResponseEntity addUser(@NotNull Account account, String tenantId) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         account.setId(UUIDUtil.getOneUUID());
         TenantToUser tenantToUser = new TenantToUser(tenantId, account.getId());
@@ -434,7 +436,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    public HttpResponseEntity addAnswerer(Account answerer) {
+    public HttpResponseEntity addAnswerer(@NotNull Account answerer) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
 
         answerer.setId(UUIDUtil.getOneUUID());
@@ -455,6 +457,73 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
         httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity charging() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Account> list = query().eq("identity", 1).list();
+
+        List<Charging> chargings = new ArrayList<>();
+        for(Account tenant : list){
+
+            Charging charging = new Charging();
+            String tenantId = tenant.getId();
+            charging.setTenantId(tenantId);
+            charging.setGroupCount(chargingMapper.groupUnderTenant(tenantId));
+
+            List<ReleasedQuestionnaire> releasedQuestionnaires = chargingMapper.questionnaireUnderTenant(tenantId);
+            charging.setQuestionnaireCount(releasedQuestionnaires.size());
+
+            int answerCount = 0;
+            for (ReleasedQuestionnaire releasedQuestionnaire : releasedQuestionnaires) {
+                String questionnaireId = releasedQuestionnaire.getQuestionnaireId();
+
+                answerCount += chargingMapper.answerUnderQuestionnaire(questionnaireId);
+            }
+            charging.setAnswerCount(answerCount);
+            charging.generateRequiredMoney();
+
+            try{
+                chargingMapper.updateById(charging);
+                chargings.add(charging);
+            }catch (Exception e){
+                e.printStackTrace();
+                httpResponseEntity.setCode(QUERY_FAIL_CODE);
+                httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+            }
+        }
+
+        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+        httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setData(chargings);
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity pay(String tenantId, double money) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        Charging charging = chargingMapper.selectById(tenantId);
+        if(charging.getRequiredMoney() > (money+charging.getBalance())){
+            httpResponseEntity.setCode(PAY_FAIL_CODE);
+            httpResponseEntity.setMessage(PAY_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+        double newBalance = charging.getBalance()+money-charging.getRequiredMoney();
+        charging.setBalance(newBalance);
+        charging.setRequiredMoney(0-charging.getRequiredMoney());
+
+        try {
+            chargingMapper.updateById(charging);
+            httpResponseEntity.setCode(PAY_SUCCESS_CODE);
+            httpResponseEntity.setMessage(PAY_SUCCESS_MESSAGE);
+            httpResponseEntity.setData(charging);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         return httpResponseEntity;
     }

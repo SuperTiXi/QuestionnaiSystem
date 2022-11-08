@@ -73,6 +73,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper,Question> im
     public HttpResponseEntity modifyQuestion(Question question) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         UpdateWrapper<Question> updateWrapper = new UpdateWrapper<>();
+
         updateWrapper.eq("id",question.getId());
 
         boolean update = update(question, updateWrapper);

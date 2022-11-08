@@ -1,5 +1,6 @@
 package com.neu.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
  */
 public class ReleasedQuestionnaire {
 
+    @TableId
     private String questionnaireId;
 
     /**

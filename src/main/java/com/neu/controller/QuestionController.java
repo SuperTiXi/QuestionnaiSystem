@@ -6,7 +6,6 @@ import com.neu.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.util.Map;
 
 @RestController
@@ -24,7 +23,7 @@ public class QuestionController {
         return questionService.modifyQuestion(question);
     }
 
-    @RequestMapping(value = "/deleteQuestion",method = RequestMethod.POST, headers = "Accept=application/json")
+    @RequestMapping(value = "/deleteQuestion",method = RequestMethod.DELETE, headers = "Accept=application/json")
     public HttpResponseEntity deleteQuestion(@RequestParam("id") String id) {
         return questionService.deleteQuestion(id);
     }

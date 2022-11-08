@@ -113,15 +113,12 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         return httpResponseEntity;
     }
 
-    /**
-     *
-     * @param questionnaire
-     * @return
-     */
+
     @Override
     public HttpResponseEntity modifyQuestionnaire(Questionnaire questionnaire) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         UpdateWrapper<Questionnaire> updateWrapper = new UpdateWrapper<>();
+
         updateWrapper.eq("id",questionnaire.getId());
 
         boolean update = update(questionnaire, updateWrapper);
@@ -134,6 +131,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         httpResponseEntity.setMessage(MODIFY_SUCCESS_MESSAGE);
         return httpResponseEntity;
     }
+
     @Override
     public HttpResponseEntity deleteQuestionnaires(List<String> ids) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();

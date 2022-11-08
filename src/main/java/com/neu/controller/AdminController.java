@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     @Autowired
-    private AccountService accountService;
+    AccountService accountService;
+
 
     /**
      * 查询数据库中的租户
@@ -70,5 +71,15 @@ public class AdminController {
     public HttpResponseEntity modify(@RequestBody Account account){
 
         return accountService.modify(account);
+    }
+
+    /**
+     * 计费
+     * @return 计费状态
+     */
+    @RequestMapping(value = "/charging",method = RequestMethod.GET,headers = "Accept=application/json")
+    public HttpResponseEntity charging(){
+
+        return accountService.charging();
     }
 }

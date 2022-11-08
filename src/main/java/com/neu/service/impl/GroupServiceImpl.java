@@ -15,6 +15,7 @@ import com.neu.dao.entity.Group;
 import com.neu.dao.entity.GroupToAnswerer;
 import com.neu.dao.entity.UserToGroup;
 import com.neu.service.GroupService;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +70,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     }
 
     @Override
-    public HttpResponseEntity addGroup(Group group, String userId) {
+    public HttpResponseEntity addGroup(@NotNull Group group, String userId) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         String current = DateUtil.now();
         String tenantId = tenantToUserMapper.queryTenantByUser(userId);
@@ -142,7 +143,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     }
 
     @Override
-    public HttpResponseEntity modify(Group group) {
+    public HttpResponseEntity modify(@NotNull Group group) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
 
         UpdateWrapper<Group> updateWrapper = new UpdateWrapper<>();

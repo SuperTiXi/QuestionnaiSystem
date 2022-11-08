@@ -36,4 +36,8 @@ public interface AccountService extends IService<Account> {
 
 
     HttpResponseEntity addAnswerer(Account answerer);
+
+    HttpResponseEntity charging();
+
+    HttpResponseEntity pay(String tenantId, double money);
 }

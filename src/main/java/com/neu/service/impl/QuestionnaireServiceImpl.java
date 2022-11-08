@@ -26,8 +26,7 @@ import static com.neu.common.Constants.*;
 
 @Service
 public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Questionnaire> implements QuestionnaireService {
-    @Autowired
-    QuestionnaireService questionnaireService;
+
     @Autowired
     QuestionnaireMapper questionnaireMapper;
     @Autowired

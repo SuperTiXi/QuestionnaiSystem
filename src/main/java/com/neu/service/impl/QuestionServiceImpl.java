@@ -20,9 +20,6 @@ import static com.neu.common.Constants.*;
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper,Question> implements QuestionService {
     @Autowired
-    QuestionService questionService;
-
-    @Autowired
     QuestionMapper questionMapper;
     final String[] cols = {"type", "user_id"};
     @Override

@@ -18,6 +18,5 @@ public interface ChargingMapper extends BaseMapper<Charging> {
     @Select("SELECT questionnaire_id FROM released_questionnaire WHERE tenant_id = #{tenantId}")
     List<ReleasedQuestionnaire> questionnaireUnderTenant(@Param("tenantId") String tenantId);
 
-    @Select("SELECT COUNT(*) FROM answer WHERE questionnaire_id = #{questionnaireId}")
-    Integer answerUnderQuestionnaire(@Param("questionnaireId") String questionnaireId);
+
 }

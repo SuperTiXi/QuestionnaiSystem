@@ -482,9 +482,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
             int answerCount = 0;
             for (ReleasedQuestionnaire releasedQuestionnaire : releasedQuestionnaires) {
-                String questionnaireId = releasedQuestionnaire.getQuestionnaireId();
-
-                answerCount += chargingMapper.answerUnderQuestionnaire(questionnaireId);
+                answerCount += releasedQuestionnaire.getAnswers();
             }
             charging.setAnswerCount(answerCount);
             charging.generateRequiredMoney();

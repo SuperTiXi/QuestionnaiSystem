@@ -23,7 +23,7 @@ public class QuestionController {
         return questionService.modifyQuestion(question);
     }
 
-    @RequestMapping(value = "/deleteQuestion",method = RequestMethod.DELETE, headers = "Accept=application/json")
+    @RequestMapping(value = "/deleteQuestion",method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity deleteQuestion(@RequestParam("id") String id) {
         return questionService.deleteQuestion(id);
     }
@@ -33,7 +33,7 @@ public class QuestionController {
      * @param map 多功能查询
      * @return
      */
-    @RequestMapping(value = "/queryQuestions",method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/queryQuestions",method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity queryQuestions(@RequestBody Map<String, String> map) {
         return questionService.queryQuestions(map);
     }

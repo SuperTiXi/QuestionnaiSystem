@@ -107,8 +107,11 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
             httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
             return httpResponseEntity;
         }
+        UpdateWrapper<Group> updateWrapper = new UpdateWrapper<>();
         try {
-            update().eq("id",groupId).set("state",0);
+            updateWrapper.eq("id",groupId);
+            updateWrapper.set("state",0);
+            update(updateWrapper);
         } catch (Exception e) {
             httpResponseEntity.setCode(DELETE_FAIL_CODE);
             httpResponseEntity.setMessage(DELETE_FAIL_MESSAGE);
@@ -129,8 +132,13 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
             httpResponseEntity.setMessage(RECOVER_FAIL_MESSAGE);
             return httpResponseEntity;
         }
+
+        UpdateWrapper<Group> updateWrapper = new UpdateWrapper<>();
         try {
-            update().eq("id",groupId).set("state",1);
+            updateWrapper.eq("id",groupId);
+            updateWrapper.set("state",1);
+            update(updateWrapper);
+
         } catch (Exception e) {
             httpResponseEntity.setCode(RECOVER_FAIL_CODE);
             httpResponseEntity.setMessage(RECOVER_FAIL_MESSAGE);

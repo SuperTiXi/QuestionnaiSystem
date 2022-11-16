@@ -28,7 +28,7 @@ public class QuestionnaireController {
         return questionnaireService.createQuestionnaire(questionnaire);
     }
 
-    @RequestMapping(value = "/findQuestionnaire",method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/findQuestionnaire",method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity findQuestionnaire(@RequestBody Map<String, String> map) {
         return questionnaireService.findQuestionnaire(map);
     }

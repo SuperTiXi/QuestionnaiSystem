@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link href="../pages/css/login1.css" rel="stylesheet" type="text/css">
+    <link href="../images/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+<div class="login-box">
+    <h2>Login</h2>
+    <form>
+        <div class="user-box">
+            <input type="text" name="UserName" id="UserName">
+            <label>Username</label>
+        </div>
+        <div class="user-box">
+            <input type="text" name="PassWord" id="PassWord">
+            <label>Password</label>
+        </div>
+
+        <a href="#" onclick="login()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            登录
+        </a>
+
+        <a href="#" onclick="register()" >
+            注册
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </a>
+    </form>
+</div>
+<!--<script src="../js/login1.js" defer=true></script>-->
+<script type="text/javascript" defer="true">
+    function login() {
+        var UserName = document.getElementById("UserName");
+        var Password = document.getElementById("PassWord");
+        alert(Password.value);
+        if (!UserName.value) {
+            alert("请先输入用户名");
+            return;
+        }
+        if (!Password.value) {
+            alert("请输入密码");
+            return;
+        }
+        // UserNameText = $("#UserName").val();
+        // var PasswordTest = $("#Password").val();
+        //
+        // var da = {
+        //     "username":UserNameText,
+        //     "password":PasswordTest
+        // };
+        //commonAjaxPost(true, "/admin/loginByUserName", da, loginSuccess)
+        window.location.href = "index.html" //界面跳转
+    }
+
+    //登录成功回调
+    function loginSuccess(result) {
+        if (result.code == '666') {
+            // layer.msg(result.message, {icon:1});
+            // setCookie('isLogin','1');
+            // setCookie('userId',result.data.id);
+            // setCookie('userName',UserNameText);
+            // setCookie('power',result.data.role);
+            // setCookie('modelId',result.data.modelId)
+            // window.location.href = "myQuestionnaires.html" 界面跳转
+        } else {
+            //layer.msg("此用户不存在",{icon:2});
+            $('#errorMsgBox').show()
+            $('#errorMsgBox').text(result.message)
+        }
+    }
+    function register(){
+        window.location.href = "register.html" //界面跳转
+    }
+</script>
+</body>
+</html>

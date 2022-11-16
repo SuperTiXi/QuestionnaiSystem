@@ -6,6 +6,8 @@ import com.neu.service.GroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 用户对所创建的群组进行管理
  */
@@ -35,8 +37,11 @@ public class UserController {
      * @return 插入状态
      */
     @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept=Application/json")
-    public HttpResponseEntity addGroup(@RequestBody Group group, @RequestParam("userId") String userId){
-
+    public HttpResponseEntity addGroup(@RequestBody Map<String,Object> map){
+        Group group = new Group();
+        group.setName((String) map.get("name"));
+        group.setDescription((String) map.get("description"));
+        String userId = (String) map.get("userId");
         return groupService.addGroup(group,userId);
     }
 

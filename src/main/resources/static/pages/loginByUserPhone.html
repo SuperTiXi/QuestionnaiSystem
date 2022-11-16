@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link href="pagesCss/login.css" rel="stylesheet" type="text/css">
+    <link href="../images/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+<div class="login-box">
+    <h2>手机号登录</h2>
+    <form>
+        <div class="user-box">
+            <input type="text" name="Phone" id="Phone">
+            <label>手机号：</label>
+        </div>
+
+        <div class="user-box">
+            <input type="text" name="Code" id="Code">
+            <label>验证码：</label>
+        </div>
+
+        <a href="#" onclick="login()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            登录
+        </a>
+        <a href="#" onclick="sendCode()" >
+            发送验证码
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </a>
+        </a>
+        <a href="#" onclick="loginByUserName()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            返回
+        </a>
+    </form>
+</div>
+<!--<script src="../js/login1.js" defer=true></script>-->
+<script type="text/javascript" defer="true">
+    function login() {
+        var Phone = document.getElementById("Phone");
+        var Code = document.getElementById("Code");
+        alert(Code.value);
+        if (!Phone.value) {
+            alert("请先输入手机号");
+            return;
+        }
+        if (!Code.value) {
+            alert("请输入验证码");
+            return;
+        }
+
+        var da = {
+            "phone":Phone.value,
+            "code":Code.value
+        };
+        commonAjaxPost(true, "/admin/loginByPhone", da, loginSuccess)
+        //window.location.href = "index.html" //界面跳转
+    }
+
+    //登录成功回调
+    function loginSuccess(result) {
+        if (result.code == '666') {
+            // layer.msg(result.message, {icon:1});
+            // setCookie('isLogin','1');
+            // setCookie('userId',result.data.id);
+            // setCookie('userName',UserNameText);
+            // setCookie('power',result.data.role);
+            // setCookie('modelId',result.data.modelId)
+            window.location.href = "index.html" //界面跳转
+        } else {
+            //layer.msg("此用户不存在",{icon:2});
+            $('#errorMsgBox').show()
+            $('#errorMsgBox').text(result.message)
+        }
+    }
+    function loginByUserName(){
+        window.location.href = "loginByUserName.html" //界面跳转
+    }
+    function sendCode(){
+        var Phone = document.getElementById("Phone");
+        if (!Phone.value) {
+            alert("请先输入手机号");
+            return;
+        }
+
+        var da = {
+            "phone":Phone.value
+        };
+        commonAjaxPost(true, "/admin/sendCode", da)
+        alert("发送成功！")
+    }
+</script>
+<script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+<script src="../js/zhezhao.js?v=3" type="text/javascript"></script>
+<script src="../plugins/layer/layer.js"></script>
+<script src="../plugins/cookie/jquery.cookie.js"></script>
+<script src="../common/common.js"></script>
+</body>
+</html>

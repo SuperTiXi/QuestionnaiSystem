@@ -29,7 +29,7 @@ public class AdminController {
     }
 
     /**
-     * 管理员添加用户
+     * 管理员添加租户
      * @param account 填写的信息，包括username，name，password，phone
      * @return  添加状态
      */

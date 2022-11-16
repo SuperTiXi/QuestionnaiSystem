@@ -247,7 +247,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
             save(account);
         } catch (Exception e) {
-
+            e.printStackTrace();
             httpResponseEntity.setCode(INSERT_FAIL_CODE);
             httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
             return httpResponseEntity;
@@ -471,6 +471,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
             Charging charging = new Charging();
             String tenantId = tenant.getId();
+            Charging charging1 = chargingMapper.selectById(tenantId);
+
+            charging.setBalance(charging1.getBalance());
             charging.setTenantId(tenantId);
             charging.setGroupCount(chargingMapper.groupUnderTenant(tenantId));
 

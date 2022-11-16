@@ -29,7 +29,7 @@ public class LoginController {
      * @param password 密码
      * @return 失败返回401，成功返回用户信息
      */
-    @RequestMapping(value = "/loginByUserName",method = RequestMethod.GET, headers = "Accept=application/json")
+    @RequestMapping(value = "/loginByUserName",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity loginByUserName(@RequestParam("userName") String userName, @RequestParam("password") String password){
 
         return accountService.loginByUserName(userName,password);

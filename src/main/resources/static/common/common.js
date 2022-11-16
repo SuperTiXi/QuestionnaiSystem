@@ -5,7 +5,7 @@
 // var httpRequestUrl = "http://114.115.132.86:8080/questionSurvey";
 
 
-var httpRequestUrl = "http://127.0.0.1:8085";
+var httpRequestUrl = "http://localhost:8081";
 //var httpRequestUrl = "http://10.211.55.5:8085";
 //var httpRequestUrl = "http://39.99.231.41:8088/";
 /**
@@ -74,7 +74,40 @@ function commonAjaxPost(async, url, data, success, err) {
         },
     });
 }
-
+/**
+ * 封装公共ajax,post的传输方式，必传参数
+ * @param async    是否同步异步
+ * @param url       请求地址
+ * @param data      传输数据
+ * @param success     成功之后的回调函数
+ */
+function commonAjaxGet(async, url, data, success, err) {
+    let keys = Object.keys(data);
+    var parms='';
+    for (let i = 0; i <keys.length; i++) {
+        parms+=keys[i]+'='+data[keys[i]];
+        if (i==keys.length-1) {
+            break;
+        }
+        parms+='&';
+    }
+    console.log(parms);
+    $.ajax({
+        "async": async,
+        "url": httpRequestUrl + url+"?"+parms,
+        "type": "GET",
+        // "data": JSON.stringify(data),
+        // "dataType": "json",
+        "contentType": "application/json",
+        success: success || function (data) {
+            // //console.log(data)
+        },
+        error: err || function (jqXHR, textStatus, errorThrown) {
+            // alert(jqXHR);
+            //  //console.log(jqXHR);
+        },
+    });
+}
 /**
  * 获取地址栏参数
  */

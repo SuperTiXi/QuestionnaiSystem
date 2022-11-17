@@ -15,8 +15,7 @@ import static com.neu.common.Constants.*;
 
 @Service
 public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements AnswerService {
-    @Autowired
-    AnswerService answerService;
+
     @Autowired
     AnswerMapper answerMapper;
     public HttpResponseEntity addAnswer(Answer answer) {

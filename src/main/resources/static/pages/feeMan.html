@@ -5,7 +5,14 @@
     <title>计费管理</title>
     <link href="pagesCss/login.css" rel="stylesheet" type="text/css">
     <link href="../images/favicon.ico" rel="shortcut icon">
-    <script src="pagesJS/examUserInf.js"></script>
+    <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../plugins/bootstrap-table/js/bootstrap-table.js"></script>
+    <script src="../plugins/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>
+    <script src="../plugins/layer/layer.js"></script>
+    <script src="../plugins/cookie/jquery.cookie.js"></script>
+    <script src="../common/common.js"></script>
+    <script src="pagesJS/feeMan.js"></script>
     <style>
         .button {
             width: 50px;
@@ -38,16 +45,16 @@
     <h2>计费管理</h2>
     <form>
         <h1>
-            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">用户名:</label>
-            <span class="spanTitle" id="userNameSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;">111</span>
+            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">用户ID:</label>
+            <span class="spanTitle" id="IdSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
         <h1>
             <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">我的费用:</label>
-            <span class="spanTitle" id="feeSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;">111</span>
+            <span class="spanTitle" id="feeSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
         <h1>
             <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">我的余额:</label>
-            <span class="spanTitle" id="balanceSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;">111</span>
+            <span class="spanTitle" id="balanceSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
         <h1>
             <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">支付金额:</label>
@@ -60,9 +67,16 @@
     outline: none;
     background: transparent;">
             <label>&nbsp&nbsp</label>
-            <button class="button" onclick="pay()">支付</button>
+<!--            <button class="button" onclick="pay()">支付</button>-->
         </h1>
-        <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <a href="#" onclick="pay()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            确定
+        </a>
+        <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <a href="#" onclick="returnToManUser()" >
             <span></span>
             <span></span>
@@ -76,7 +90,15 @@
     //支付方法
     function pay(){
         var money=document.getElementById("payment");
-
+        var url='/tenant/pay'
+        var da = {
+            'tenantId':getCookie("tenantId"),
+            'money':money.value
+        };
+        commonAjaxPost(true,url,da,function (){
+            alert("已支付"+money.value+"元");
+            getUserList()
+        })
     }
     function returnToManUser(){
         window.location.href = "manUser.html" //界面跳转

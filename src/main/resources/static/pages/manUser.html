@@ -21,7 +21,6 @@
     <div align="left"><label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <button class="buttonL" onclick="toAddNewUser()">添加用户</button>
         <button class="buttonL" onclick="toFeeMan()">计费管理</button>
-        <button class="buttonL" onclick="">状态统计</button>
         <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
         <input class="user-box" type="text" name="searchUN" id="searchUN" placeholder="在此输入用户名">
@@ -69,10 +68,10 @@
 <!--            <button class="button" onclick="">修改</button>-->
 <!--        </td>-->
 <!--    </tr>-->
+    <!--        <td>2961</td>-->
 <!--    <tr>-->
 <!--        <td>LinkedIn</td>-->
 <!--        <td>3654</td>-->
-<!--        <td>2961</td>-->
 <!--        <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
 <!--        <td style="width: 150px">-->
 <!--            <button class="button" onclick="">查看</button>-->
@@ -102,6 +101,11 @@
 <!--    </tbody>-->
 </table>
 <script>
+
+    function searchFun(){
+        var searUserName=document.getElementById("searchUN");
+    }
+
     function toAddNewUser(){
         window.location.href = "addNewUser.html" //界面跳转
     }
@@ -110,9 +114,6 @@
         window.location.href = "feeMan.html" //界面跳转
     }
 
-    function searchFun() {
-
-    }
 </script>
 </body>
 </html>

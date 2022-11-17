@@ -441,7 +441,7 @@ function onclickChoose(questionnaireId,problemId) {
         answerNum:problemId,
         questionId:id
     }
-    console.log(data)
+
     $.ajax({
         "async": false,
         "url": httpRequestUrl + url,

@@ -65,11 +65,17 @@
         var userName = document.getElementById("UserName");
         var password = document.getElementById("PassWord");
         var rePassword = document.getElementById("rPassWord");
+        var question = document.getElementById("Question");
+        var answer = document.getElementById("Answer");
         if (password.val!==rePassword.val){
             alert("两次输入的密码不一致！");
             return;
         }
         var url = '/tenant/insert';
+        var info = {
+            "question":question.value,
+            "answer":answer.value
+        }
         var data = {
             "username": userName.value,
             "name": document.getElementById("Name").value,
@@ -77,7 +83,7 @@
             //"identity": 1,
             "phone": document.getElementById("Phone").value,
             //"status" : 1,
-            //"info":document.getElementById("Question"), //修改
+            "info":JSON.stringify(info), //修改
             "tenantId": getCookie("tenantId")
         };
         commonAjaxPost(true, url, data, function (result) {

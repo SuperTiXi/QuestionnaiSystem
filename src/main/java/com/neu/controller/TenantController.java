@@ -6,6 +6,8 @@ import com.neu.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 租户对用户进行管理
  */
@@ -29,12 +31,18 @@ public class TenantController {
 
     /**
      * 添加用户
-     * @param account 需要填写userName,name,phone,password
+     * @param map 需要填写userName,name,phone,password
      * @return 添加状态
      */
     @RequestMapping(value = "/insert",method = RequestMethod.POST,headers = "Accept=Application/json")
-    public HttpResponseEntity addUser(@RequestBody Account account,@RequestParam("tenantId") String tenantId){
-
+    public HttpResponseEntity addUser(@RequestBody Map<String,Object> map){
+        String tenantId = (String) map.get("tenantId");
+        Account account = new Account();
+        account.setUserName((String) map.get("username"));
+        account.setName((String) map.get("name"));
+        account.setPassword((String) map.get("password"));
+        account.setPhone((String) map.get("phone"));
+        account.setInfo((String) map.get("info"));
         return accountService.addUser(account,tenantId);
     }
 

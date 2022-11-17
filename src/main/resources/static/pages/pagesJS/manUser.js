@@ -1,6 +1,6 @@
 $(function () {
-    // isLoginFun();
-    // header();
+    isLoginFun();
+    header();
      $("#ctl01_lblUserId").text(getCookie('userId'));
     var oTable = new TableInit();
     oTable.Init();
@@ -21,8 +21,8 @@ function TableInit() {
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true, //是否显示分页（*）
-            sortable:true,
-            sortOrder: "asc",                   //排序方式
+            //sortable:true,
+            //sortOrder: "asc",                   //排序方式
             queryParamsType: '',
             dataType: 'json',
             paginationShowPageGo: true,
@@ -42,7 +42,16 @@ function TableInit() {
             columns: [{
                 checkbox: true,
                 visible: false
-            }, {
+            },
+                {
+                    field: 'id',
+                    title: '序号',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                },
+                {
                 field: 'username',
                 title: '用户名',
                 align: 'center',
@@ -79,12 +88,14 @@ function TableInit() {
                     var NewData = [];
                     if (userInfo.length) {
                         for (var i = 0; i < userInfo.length; i++) {
+                            if (userInfo[i]===null) continue;
                             var dataNewObj = {
+                                'id':'',
                                 "username": '',
                                 "name": '',
                                 'phone': '',
                             };
-
+                            dataNewObj.id=i;
                             dataNewObj.username = userInfo[i].userName;
                             dataNewObj.name = userInfo[i].name;
                             dataNewObj.phone = userInfo[i].phone;
@@ -123,16 +134,17 @@ function TableInit() {
 window.operateEvents = {
     //编辑
     'click #btn_count': function (e, value, row, index) {
-        id = row.id;
-        $.cookie('questionId', id);
+        // ind = row.id;
+        // $.cookie('userIndex', ind);
     }
 };
+
 
 // 表格中按钮
 function addFunctionAlty1(value, row, index) {
     var btnText = '';
 
-    btnText += "<button type=\"button\" id=\"btn_look\" onclick=\"changeStatus()\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">停用</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"changeStates(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">停用</button>&nbsp;&nbsp;";
 
     return btnText;
 }
@@ -140,27 +152,59 @@ function addFunctionAlty1(value, row, index) {
 function addFunctionAlty(value, row, index) {
     var btnText = '';
 
-    btnText += "<button type=\"button\" id=\"btn_look\" onclick=\"toExamUserInfo()\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamUserInfo(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
 
-    btnText += "<button type=\"button\" id=\"btn_look\" onclick=\"toTenantModUserInf()\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toTenantModUserInf(" + "'" + row.username + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
 
     return btnText;
 }
 
-//重置密码
 
-function toExamUserInfo(){
-    window.location.href = "../examUserInf.html" //界面跳转
+function toExamUserInfo(id){
+    setCookie("userIndex",id)
+    window.location.href = "examUserInf.html" //界面跳转
 }
 
-function toTenantModUserInf(){
-    window.location.href = "../tenantModUserInf.html" //界面跳转
+function toTenantModUserInf(userName){
+    setCookie("userName",userName)
+    window.location.href = "tenantModUserInf.html" //界面跳转
 }
 
 // 修改用户状态（禁用、开启）
-function changeStatus() {
-    var status;
-    alert("修改用户状态")
+function changeStates(id) {
+    //var url = '/tenant/list?tenantId='+getCookie("tenantId");
+    var url = '/tenant/list';
+    var data = {"tenantId": getCookie("tenantId")};
+    commonAjaxGet(true, url, data, changeUserStates);
+
+    // 查看用户信息成功
+    function changeUserStates(result) {
+        //console.log(result)
+        if (result.code == "666") {
+            var userInfo = result.data[id];
+            console.log(userInfo);
+            var state=userInfo.state;
+            var url=(state===0?'/tenant/recover':'/tenant/delete')
+            var da = {
+                'userName':userInfo.userName,
+                'phone':userInfo.phone
+            };
+            commonAjaxPost(true,url,da,function (){
+                alert("修改用户状态成功")
+                getUserList()
+            })
+
+
+        } else if (result.code === "333") {
+            layer.msg(result.message, {icon: 2});
+            setTimeout(function () {
+                window.location.href = '/manUser.html';
+            }, 1000)
+        } else {
+            layer.msg(result.message, {icon: 2})
+        }
+
+    }
 }
 
 

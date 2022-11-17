@@ -48,25 +48,25 @@ public class TenantController {
 
     /**
      * 停用用户账户
-     * @param userName 账户名
-     * @param phone 手机号
      * @return 状态
      */
     @RequestMapping(value = "/delete",method = RequestMethod.POST,headers = "Accept=application/json")
-    public HttpResponseEntity delete(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
+    public HttpResponseEntity delete(@RequestBody Map<String,Object> map){
+        String userName = (String) map.get("userName");
+        String phone = (String) map.get("phone");
 
         return accountService.delete(userName,phone);
     }
 
     /**
      * 启用用户账户
-     * @param userName 账户名
-     * @param phone 手机号
+     * @param map
      * @return 状态
      */
     @RequestMapping(value = "/recover",method = RequestMethod.POST,headers = "Accept=application/json")
-    public HttpResponseEntity recover(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
-
+    public HttpResponseEntity recover(@RequestBody Map<String,Object> map){
+        String userName = (String) map.get("userName");
+        String phone = (String) map.get("phone");
         return accountService.recover(userName,phone);
     }
 

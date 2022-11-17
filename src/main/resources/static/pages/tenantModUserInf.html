@@ -56,22 +56,27 @@
 </div>
 <script type="text/javascript" defer="true">
     function modUser() {
-        var userName = document.getElementById("UserName");
         var password = document.getElementById("PassWord");
         var rePassword = document.getElementById("rPassWord");
+        var question = document.getElementById("Question");
+        var answer = document.getElementById("Answer");
         if (password.val!==rePassword.val){
             alert("两次输入的密码不一致！");
             return;
         }
+        var info = {
+            "question":question.value,
+            "answer":answer.value
+        }
         var url = '/tenant/modify';
         var data = {
-            "username": userName.value,
+            "userName": getCookie("userName"),
             "name": document.getElementById("Name").value,
             "password": password.value,
-            //"identity": 1,
+            "identity": 2,
             "phone": document.getElementById("Phone").value,
-            //"status" : 1,
-            //"info":document.getElementById("Question"), //修改
+            "state" : 1,
+            "info":JSON.stringify(info), //修改
             "tenantId": getCookie("tenantId")
         };
         commonAjaxPost(true, url, data, function (result) {
@@ -93,7 +98,7 @@
             }
         })
 
-        window.location.href = "loginByUserName.html" //界面跳转
+        //window.location.href = "loginByUserName.html" //界面跳转
     }
 
     function returnToManUser(){

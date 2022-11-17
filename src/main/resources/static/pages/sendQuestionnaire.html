@@ -296,7 +296,6 @@
                                                 <span style="color:red">*</span><label for="msg" class="control-label fontWeight">发布消息内容</label>
                                                 <!--<label class="clearfix">-->
 
-                                                <span class="must" style="margin-left: 10px;font-size: 12px;">注意：请在需要加入姓名、问卷名称的位置添加"<em class="blue">【姓名】、【问卷名】</em>"，系统将会根据问卷自动进行替换！</span>
                                                 <!--</label>-->
                                                 <div>
                                                  <textarea class="form-control-t" id="msg" onkeyup="wordStatic(this);"
@@ -308,11 +307,7 @@
                                                           onkeydown="this.value=this.value.substring(0, 38)"
                                                            onkeyup="this.value=this.value.substring(0, 38)"
                                                           style="width: 750px;height:100px;border-radius: 4px;border: 1px solid #abafb2;resize:none;padding:6px 12px;margin-top: 15px"></textarea> -->
-                                                    <p class="text-count" style="font-size:12px;">
-                                                        <!--输入<span id="txt">0</span>字&nbsp;-->
-                                                        还能输入<span id="Lnum" style="color:red;font-size:12px;"></span>个字,
-                                                        此短信内容将按<span id="num" style="color:red;font-size:12px;">0</span>条短信计费
-                                                    </p>
+
 
                                                 </div>
                                             </div>
@@ -408,8 +403,7 @@
 
                                             <div class="text-center finish__wrap ui-dialog__marginT-12"
                                                  style="margin-top:20px;" id="sendButton">
-                                                <a class="btn btn-blue-frame" href="javascript:void(0)"
-                                                   style="color:#1ea0fa" onclick="layOutHold('true')">保存内容</a>
+
                                                 <a onclick="layOutSend();" id="ctl02_ContentPlaceHolder1_btnSend"
                                                     class="btn  btn-blue-solid">立即发送</a>
                                             </div>

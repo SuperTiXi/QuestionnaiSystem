@@ -1,11 +1,11 @@
 var persons = []; //传入调查人员信息
 var sendTime = "";
-var questionnaireId = getCookie("questionaireId");
+var questionnaireId = getCookie("questionnaireId");
 var dataId = getCookie("dataId");  // 在校生：2；毕业生：3；教师：4；用人单位：5
-var nameOfQuestionnaire = getCookie("nameOfQuestionnaire");
+var questionnaireName = getCookie("questionnaireName");
 var userId = getCookie("userId");
-document.getElementById("questPeople").innerText = "调查人员信息 — " + nameOfQuestionnaire;
-document.getElementById("ctl02_ContentPlaceHolder1_InviteEmail1_hrefSend").innerText = "批量发送问卷 — " + nameOfQuestionnaire;
+document.getElementById("questPeople").innerText = "调查人员信息 — " + questionnaireName;
+document.getElementById("ctl02_ContentPlaceHolder1_InviteEmail1_hrefSend").innerText = "批量发送问卷 — " + questionnaireName;
 var shortMessageGetTime = '0';
 
 
@@ -526,9 +526,7 @@ function layOutSend() {
         //发送问卷答题结束语
         var endContent = document.getElementById("tipT").value;
 
-        if (persons.length == 0) {
-            layer.msg("请添加调查人员信息", {icon: 2});
-        } else if (endContent == "") {
+        if (endContent == "") {
             layer.msg("请添加答题结束语", {icon: 2});
         } else if (sendContent == "") {
             layer.msg("请添加短信内容", {icon: 2});
@@ -543,7 +541,6 @@ function layOutSend() {
                 "releaseTime": sendTime,            //发送时间
             };
             setTimeout(function () {
-
                 layer.msg("发送成功", {icon: 1});
             }, 2000);
             jQuery.ajax({

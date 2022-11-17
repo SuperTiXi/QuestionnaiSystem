@@ -15,7 +15,7 @@ var questionnaireId = getCookie("questionnaireId");
 //判断cookie里有没有问卷id、项目id
 var aaa = 0;
 var bbb = 0;
-
+var questionId
 $(function () {
     console.log(getCookie("QuestionId"));
     deleteCookie('previewId');
@@ -40,7 +40,7 @@ $(function () {
             qIdStr = $.base64.decode(i);
             setCookie('QuestionId', qIdStr);
         }
-
+        questionId = qIdStr;
         var da = {'id': questionnaireId};
     }
 
@@ -1194,9 +1194,23 @@ function queryQuestionnaireAllSuccess(res) {
     if (res.code == '666') {
         // alert("查询问卷详情成功");
         //查询的是历史问卷
-
         $('.questionTitle').text(res.data.name); //问卷名称
+        questionIdForChange = res.data.id;
+        dataId = res.data.dataId;
+        console.log(res.data.questionName);
 
+        if (res.data.questionStop == '4' || res.data.questionStop == '0') {
+            if (getCookie('isEdit') != '1') {
+                deleteCookie('QuestionId');
+                judgeQuestionId();
+                $('.questionTitle').text(questionInfo.questionName); //问卷名称
+                $('#pater_desc').html(questionInfo.questionContent);//问卷说明
+            }
+        } else if (res.data.questionStop == '5') {
+            endTime = res.data.endTime;
+            startTime = res.data.startTime;
+            questionStop = res.data.questionStop;
+        }
         var question = JSON.parse(res.data.info);
         setCookie('questionList', question);
         if (question != null) {
@@ -1477,3 +1491,23 @@ function judgeProjectId() {
         bbb = 1;
     }
 }
+function addFile() {
+    document.getElementById("image").click();
+}
+$('#image').change(function (e){
+    let file = e.target.files[0];
+
+    if(window.FileReader){
+        const reader = new FileReader();
+
+        reader.onload = function (ev) {
+            const questionList = JSON.parse(ev.target.result);
+            console.log(questionList);
+            for (let i = 0; i < questionList.length; i++) {
+                showQuestion(questionList[i]);
+            }
+        };
+
+        reader.readAsText(file);
+    }
+})

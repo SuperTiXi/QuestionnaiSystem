@@ -86,7 +86,7 @@ function TableInit() {
     //初始化Table
     oTableInit.Init = function () {
         $('#analyseTable').bootstrapTable({
-            url: httpRequestUrl + '/release/queryQuestionnaireById?=questionnaireId='+questionnaireId,         //请求后台的URL（*）
+            url: httpRequestUrl + '/release/queryQuestionnaireById?questionnaireId='+questionnaireId,         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             pagination: true,                   //是否显示分页（*）
@@ -147,16 +147,16 @@ function TableInit() {
                     function success(res){
                         if(res.code=="666"){
                             var answerList = res.data;
-                            for (let i = 0; i < questionList.length - 1; i++) {
+                            for (let i = 0; i < questionList.length; i++) {
                                 var object = {
                                     'question':questionList[i].questionTitle,
                                     'answerInfo':''
                                 }
                                 var optionList = questionList[i].options;
                                 var optionCount = {};
-                                for (let j = 0; j < optionList.length - 1; j++) {
+                                for (let j = 0; j < optionList.length; j++) {
                                     var count = 0;
-                                    for (let k = 0; k < answerList.length - 1; k++) {
+                                    for (let k = 0; k < answerList.length; k++) {
 
                                         if(answerList[i]==j){
                                             count++;

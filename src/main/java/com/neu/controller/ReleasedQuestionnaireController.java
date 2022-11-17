@@ -23,12 +23,12 @@ public class ReleasedQuestionnaireController {
     }
 
     @RequestMapping(value = "/queryQuestionnaireById",method = RequestMethod.GET,headers ="Accept=application/json")
-    public HttpResponseEntity queryQuestionnaireById(@RequestParam("id") String id) {
+    public HttpResponseEntity queryQuestionnaireById(@RequestParam("questionnaireId") String id) {
         return releasedQuestionnaireService.queryQuestionnaireById(id);
     }
 
     @RequestMapping(value = "/getAnswersByQuestionnaire", method = RequestMethod.GET,headers ="Accept=application/json")
-    public HttpResponseEntity getAnswersByQuestionnaire(@RequestParam("id") String id) {
+    public HttpResponseEntity getAnswersByQuestionnaire(@RequestParam("questionnaireId") String id) {
         return releasedQuestionnaireService.getAnswersByQuestionnaire(id);
     }
 }

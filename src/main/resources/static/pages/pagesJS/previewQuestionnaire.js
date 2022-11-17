@@ -374,7 +374,7 @@ function setQuestion(result) {
     $(".container-fluidT").append('<div>\n' +
         '            <button class="btn btn-primary submitBtn" onclick="submitQuestionnaire()">提交</button>\n' +
         '        </div>');
-};
+}
 
 
 //获取地址栏上的问卷id    进页面

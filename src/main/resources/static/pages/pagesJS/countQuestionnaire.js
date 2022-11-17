@@ -87,7 +87,7 @@ function TableInit() {
     //初始化Table
     oTableInit.Init = function () {
         $('#countTable').bootstrapTable({
-            url: httpRequestUrl + '/release/queryQuestionnaireById?=questionnaireId='+questionnaireId,         //请求后台的URL（*）
+            url: httpRequestUrl + '/release/queryQuestionnaireById?questionnaireId='+questionnaireId,         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             pagination: true,                   //是否显示分页（*）
@@ -156,7 +156,7 @@ function TableInit() {
                     commonAjaxPost(true,'/answer/getAnswerersCount',data,success)
 
                     function success(res){
-                        for (let i = 0; i < questionList.length - 1; i++) {
+                        for (let i = 0; i < questionList.length; i++) {
                             var object = {
                                 'question':questionList[i].questionTitle,
                                 'answerNum':questionnaire.answers,

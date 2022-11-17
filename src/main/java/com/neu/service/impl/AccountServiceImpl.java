@@ -362,7 +362,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         if(userIds.isEmpty()){
             httpResponseEntity.setCode(QUERY_FAIL_CODE);
-            httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
 
             return httpResponseEntity;
         }
@@ -376,7 +376,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
 
         httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
-        httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
         httpResponseEntity.setData(accounts);
 
         return httpResponseEntity;

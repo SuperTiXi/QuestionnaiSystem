@@ -16,8 +16,8 @@ function TableInit() {
     //初始化Table
     oTableInit.Init = function () {
         $('#userTable').bootstrapTable({
-            url: httpRequestUrl + '/tenant/list',         //请求后台的URL（*）
-            method: 'POST',                      //请求方式（*）
+            url: httpRequestUrl + '/tenant/list?tenantId='+getCookie("tenantId"),         //请求后台的URL（*）
+            method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true, //是否显示分页（*）
@@ -28,7 +28,7 @@ function TableInit() {
             paginationShowPageGo: true,
             showJumpto: true,
             pageNumber: 1, //初始化加载第一页，默认第一页
-            queryParams: queryParams,//请求服务器时所传的参数
+            // queryParams:JSON.stringify(getCookie("tenantId")),//请求服务器时所传的参数
             sidePagination: 'server',//指定服务器端分页
             pageSize: 10,//单页记录数
             pageList: [10, 20, 30, 40],//分页步进值
@@ -72,10 +72,10 @@ function TableInit() {
                     formatter: addFunctionAlty//表格中增加按钮
                 }],
             responseHandler: function (res) {
-                // console.log(res);
+                 console.log(res);
                 if(res.code === "666"){
-                    var userInfo=JSON.parse('[{"username":"asd","name":"s","phone":"123456"},{"username":"zxc","name":"z","phone":"123456"},{"username":"qwe","name":"q","phone":"123456"}]');
-                    //var userInfo = res.data.list;
+                    // var userInfo=JSON.parse('[{"username":"asd","name":"s","phone":"123456"},{"username":"zxc","name":"z","phone":"123456"},{"username":"qwe","name":"q","phone":"123456"}]');
+                    var userInfo = res.data;
                     var NewData = [];
                     if (userInfo.length) {
                         for (var i = 0; i < userInfo.length; i++) {
@@ -85,7 +85,7 @@ function TableInit() {
                                 'phone': '',
                             };
 
-                            dataNewObj.username = userInfo[i].username;
+                            dataNewObj.username = userInfo[i].userName;
                             dataNewObj.name = userInfo[i].name;
                             dataNewObj.phone = userInfo[i].phone;
                             NewData.push(dataNewObj);
@@ -93,7 +93,7 @@ function TableInit() {
                         console.log(NewData)
                     }
                     var data = {
-                        total: res.data.total,
+                        total: res.data.length,
                         rows: NewData
                     };
                     return data;
@@ -127,7 +127,6 @@ window.operateEvents = {
         $.cookie('questionId', id);
     }
 };
-
 
 // 表格中按钮
 function addFunctionAlty1(value, row, index) {

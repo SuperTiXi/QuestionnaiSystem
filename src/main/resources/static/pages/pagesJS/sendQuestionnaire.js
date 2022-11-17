@@ -1,9 +1,9 @@
 var persons = []; //传入调查人员信息
 var sendTime = "";
-var questionId = getCookie("questionId");
+var questionnaireId = getCookie("questionaireId");
 var dataId = getCookie("dataId");  // 在校生：2；毕业生：3；教师：4；用人单位：5
 var nameOfQuestionnaire = getCookie("nameOfQuestionnaire");
-
+var userId = getCookie("userId");
 document.getElementById("questPeople").innerText = "调查人员信息 — " + nameOfQuestionnaire;
 document.getElementById("ctl02_ContentPlaceHolder1_InviteEmail1_hrefSend").innerText = "批量发送问卷 — " + nameOfQuestionnaire;
 var shortMessageGetTime = '0';
@@ -43,6 +43,26 @@ window.operateEvents = {
                }
            })
         });
+    },
+    'click #Tbtn_choose':function (e, value, row, index){
+        id = row.id;
+        // //console.log(id);
+        layer.confirm('您确认要选择该组吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            var data = {
+                "groupId":row.id,
+                "questionnaireId":questionnaireId
+            };
+            commonAjaxPost(false,"/answer/addGroupToQuestionnaire",data,function (res) {
+                if(res.code == '666'){
+                    layer.msg(res.message,{icon: 1});
+                }
+                else {
+                    layer.msg(res.message,{icon: 1});
+                }
+            })
+        });
     }
 };
 
@@ -81,53 +101,88 @@ var columnsForCompany =[{
         formatter: addFunctionAlty//表格中增加按钮
     }]
 
-
-if (dataId == "2") {
-    $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../在校生上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-} else if (dataId == "3") {
-    $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../毕业生上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-} else if (dataId == "4") {
-    $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../教师上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-} else if (dataId == "5") {
-    $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../用人单位上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-    columnsForCompany = [{
-        checkbox: true,
-        visible: false
+//group用
+var columnsForGroup =[{
+    checkbox: true,
+    visible: false
+}, {
+    field: 'id',
+    title: '序号',
+    align: 'center',
+}, {
+    field: 'name',
+    title: '组名',
+    align: 'center',
+    width: '200px'
+},
+    {
+        field: 'description',
+        title: '描述',
+        align: 'center'
     }, {
-        field: 'no',
-        title: '序号',
-        align: 'center',
-    }, {
-        field: 'answerNum',
-        title: '答题人编号',
-        align: 'center',
-        width: '200px'
+        field: 'createTime',
+        title: '创建时间',
+        align: 'center'
     },
-        {
-            field: 'answerName',
-            title: '用人单位',
-            align: 'center'
-        }, {
-            field: 'answerBelong',
-            title: '学校',
-            align: 'center'
-        }, {
-            field: 'answerPhone',
-            title: '手机号码',
-            align: 'center'
-        },
-        {
-            field: 'answerEmail',
-            title: '邮箱',
-            align: 'center'
-        }, {
-            field: 'operation',
-            title: '操作',
-            align: 'center',
-            events: operateEvents,//给按钮注册事件
-            formatter: addFunctionAlty//表格中增加按钮
-        }]
+    {
+        field: 'operation',
+        title: '操作',
+        align: 'center',
+        events: operateEvents,//给按钮注册事件
+        formatter: addFunction//表格中增加按钮
+    }]
+
+function addFunction(value, row, index){
+    return [
+        '<button id="Tbtn_choose" style=" background-color: #f9f9f9;color: #f00;">选择</button>'
+    ].join('');
 }
+// if (dataId == "2") {
+//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../在校生上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
+// } else if (dataId == "3") {
+//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../毕业生上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
+// } else if (dataId == "4") {
+//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../教师上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
+// } else if (dataId == "5") {
+//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../用人单位上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
+//     columnsForCompany = [{
+//         checkbox: true,
+//         visible: false
+//     }, {
+//         field: 'no',
+//         title: '序号',
+//         align: 'center',
+//     }, {
+//         field: 'answerNum',
+//         title: '答题人编号',
+//         align: 'center',
+//         width: '200px'
+//     },
+//         {
+//             field: 'answerName',
+//             title: '用人单位',
+//             align: 'center'
+//         }, {
+//             field: 'answerBelong',
+//             title: '学校',
+//             align: 'center'
+//         }, {
+//             field: 'answerPhone',
+//             title: '手机号码',
+//             align: 'center'
+//         },
+//         {
+//             field: 'answerEmail',
+//             title: '邮箱',
+//             align: 'center'
+//         }, {
+//             field: 'operation',
+//             title: '操作',
+//             align: 'center',
+//             events: operateEvents,//给按钮注册事件
+//             formatter: addFunctionAlty//表格中增加按钮
+//         }]
+// }
 
 // 发送方式，短信：0； 邮件：1； 链接：2；
 var sendType = '0';
@@ -195,6 +250,58 @@ function TableInit() {
             minimumCountColumns: 2,             //最少允许的列数
             uniqueId: "no",                     //每一行的唯一标识，一般为主键列
             columns: columnsForCompany
+        });
+
+        $('#groupInfoTable').bootstrapTable({
+            url:httpRequestUrl+"/user/list?userId="+userId,
+            method:"GET",
+            striped: true,                      //是否显示行间隔色
+            pagination: true,                   //是否显示分页（*）
+            sortOrder: "asc",                   //排序方式
+            queryParamsType: '',
+            dataType: 'json',
+            paginationShowPageGo: true,
+            showJumpto: true,
+            pageNumber: 1, //初始化加载第一页，默认第一页
+            // queryParams: queryParams,//请求服务器时所传的参数
+            sidePagination: 'client',
+            pageSize: 10,//单页记录数
+            pageList: [10, 20, 30, 40],//分页步进值
+            search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            silent: true,
+            showRefresh: false,                  //是否显示刷新按钮
+            showToggle: false,
+            minimumCountColumns: 2,             //最少允许的列数
+            uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+            columns: columnsForGroup,
+
+            responseHandler:function (res){
+                console.log(res);
+                if(res.code=="666"){
+                    var groups = [];
+                    for (let i = 0; i < res.data.length; i++) {
+                        var group = {
+                            'id':'',
+                            'name':'',
+                            'description':'',
+                            'createTime':''
+                        };
+                        group.id = res.data[i].id;
+                        group.name = res.data[i].name;
+                        group.description = res.data[i].description;
+                        group.createTime = res.data[i].createTime;
+
+                        groups.push(group);
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        _$("#groupInfoTable").bootstrapTable('insertRow', {index: i, row: groups[i]});
+
+                    }
+                }
+                else {
+                    layer.msg(res.message);
+                }
+            }
         });
     };
 
@@ -327,35 +434,35 @@ function addFile() {
     document.getElementById("image").click();
 }
 
-//获取答题结束提示语、和短信内容
-function getQuestionInfo() {
-    var da = {
-        'id': questionId
-    };
-    var url = '/queryQuestContextEnd';
-    jQuery.ajax({
-        url: httpRequestUrl + url,
-        type: "POST",
-        data: JSON.stringify(da),
-        dataType: "json",
-        contentType: "application/json",
-        success: function (res) {
-            // //console.log(res);
-            if (!res.data) {
-
-            } else {
-                document.getElementById('tipT').value = res.data.questionEndContent;
-                document.getElementById('msg').value = res.data.context;
-            }
-            objLength = document.getElementById('msg').value.length;
-            objLength1 = 38 - objLength;
-            document.getElementById('Lnum').innerText = objLength1
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            // alert(jqXHR);
-        }
-    });
-}
+// //获取答题结束提示语、和短信内容
+// function getQuestionInfo() {
+//     var da = {
+//         'id': questionnaireId
+//     };
+//     var url = '/queryQuestContextEnd';
+//     jQuery.ajax({
+//         url: httpRequestUrl + url,
+//         type: "POST",
+//         data: JSON.stringify(da),
+//         dataType: "json",
+//         contentType: "application/json",
+//         success: function (res) {
+//             // //console.log(res);
+//             if (!res.data) {
+//
+//             } else {
+//                 document.getElementById('tipT').value = res.data.questionEndContent;
+//                 document.getElementById('msg').value = res.data.context;
+//             }
+//             objLength = document.getElementById('msg').value.length;
+//             objLength1 = 38 - objLength;
+//             document.getElementById('Lnum').innerText = objLength1
+//         },
+//         error: function (jqXHR, textStatus, errorThrown) {
+//             // alert(jqXHR);
+//         }
+//     });
+// }
 
 //读取上传的excel表格中的内容
 $('#image').change(function (e) {
@@ -447,7 +554,7 @@ function layOutSend() {
                         var personsData = _$('#userInfoTable').bootstrapTable('getData');
                         //短信发送问卷
                         var data = {
-                            "questionId": questionId,           //问卷id
+                            "questionnaireId": questionnaireId,           //问卷id
                             "dataId": dataId,                    //问卷类型
                             "releaseTime": sendTime,            //发送时间
                             "sendType": sendType,                //发送类别，0短信，1邮件
@@ -508,7 +615,7 @@ function layOutSend() {
             var personsData = _$('#userInfoTable').bootstrapTable('getData');
             //邮件发送问卷
             var data = {
-                "questionId": questionId,           //问卷id
+                "questionnaireId": questionnaireId,           //问卷id
                 "dataId": dataId,                    //问卷类型
                 "releaseTime": "",            //发送时间
                 "sendType": sendType,                //发送类别，0短信，1邮件
@@ -562,7 +669,7 @@ function layOutHold(falg) {
         var sendContent = document.getElementById("msg").value;
 
         data = {
-            "questionId": questionId,           //问卷id
+            "questionnaireId": questionnaireId,           //问卷id
             "dataId": dataId,                    //问卷类型
             "sendType": sendType,                //发送类别，0短信，1邮件
             "context": sendContent,                 //短信内容
@@ -578,7 +685,7 @@ function layOutHold(falg) {
         emailContent = emailContent.value;
         //发送问卷答题结束语
         data = {
-            "questionId": questionId,           //问卷id
+            "questionnaireId": questionnaireId,           //问卷id
             "dataId": dataId,                    //问卷类型
             "sendType": sendType,                //发送类别，0短信，1邮件
             "emailTitle": emailTitle,                //邮件标题
@@ -589,7 +696,7 @@ function layOutHold(falg) {
 
     } else if (sendType == "2") {
         data = {
-            "questionId": questionId,           //问卷id
+            "questionnaireId": questionnaireId,           //问卷id
             "sendType": sendType,                //发送类别，0短信，1邮件
             "questionEndContent": endContent,        //答卷结束语
             "sendInfo": null                     //人员信息
@@ -625,9 +732,9 @@ function layOutHold(falg) {
 //生成二维码
 function getQrcode() {
     _$("#ctl02_ContentPlaceHolder1_imgQrcode").empty();
-    var url = '/getShortUrlForLink';
+    var url = '/answer/getShortUrlForLink';
     var da = {
-        'id': questionId,
+        'id': questionnaireId,
         'link' : httpRequestUrl + "/pages/previewQuestionnaire.html?id="
     };
     // //console.log(da);
@@ -694,8 +801,8 @@ function designQuestionnaire() {
     if (ifDesignQuestionnaire == "false") {
         layer.msg("问卷处于运行状态或问卷已发布，不可设计问卷", {icon: 2})
     } else {
-        _$.cookie("QuestionId", questionId);
-        let qId = _$.base64.encode(questionId);
+        _$.cookie("questionnaireId", questionnaireId);
+        let qId = _$.base64.encode(questionnaireId);
         let url = "designQuestionnaire.html?qId="+qId;
         window.open(url);
     }
@@ -703,7 +810,7 @@ function designQuestionnaire() {
 
 //预览问卷
 $('#ctl02_hrefView').click(function () {
-    window.open('previewQuestionnaire.html?i=' + questionId)
+    window.open('previewQuestionnaire.html?i=' + questionnaireId)
 });
 
 

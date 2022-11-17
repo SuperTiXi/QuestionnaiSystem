@@ -1,11 +1,11 @@
 var questionId = '';
 var questionList = [];
 var timeStart = '';
-var id = '';
+var id =getCookie("questionnaireId");
 var contact = '';
-var eORp = 'zzz';     //判断是邮箱还是手机号还是连接
+var eORp = getCookie("type");     //判断是邮箱还是手机号还是连接
 var flag = "false";
-
+var answerId = getCookie("answerId")
 var previewType = getCookie("previewType");
 
 $(function () {
@@ -18,9 +18,9 @@ $(function () {
     //获取开始答题时间
     timeStart = (new Date()).Format("yyyy/M/d h:m:s");
     //判断有没有答过
-    var url = '/queryQuestionnaireById';
-    var da = {'questionId':id};
-    if (eORp != 'zzz') {
+    var url = '/questionnaire/findQuestionnaire';
+    var da = {'id':id};
+    if (eORp != 'preview') {
         if (eORp == 'p') {
             da.phone = contact;
         } else if (eORp == "e") {
@@ -37,13 +37,13 @@ $(function () {
 
 //提交答案
 function submitQuestionnaire() {
-    if (eORp == "zzz") {
+    if (eORp == "preview") {
         alert("预览状态，无法答题");
         return;
     } else {
         //获取答题结束时间
         var timeEnd = (new Date()).Format("yyyy/M/d h:m:s");
-        var ipAddress = returnCitySN["cip"];     //获取ip
+        // var ipAddress = returnCitySN["cip"];     //获取ip
         var questionNum = $(".container-fluidT").find(".form-group").length;
         var answerList = [];
         var qAnswer = '';
@@ -52,6 +52,9 @@ function submitQuestionnaire() {
 
             switch (questionType) {
                 case "0": //单选
+                    qAnswer = $('input[name="a' + i + '"]:checked').val();
+                    answerList.push(qAnswer);
+                    break;
                 case "4": //量表
                     qAnswer = $('input[name="a' + i + '"]:checked').val();
                     answerList.push(qAnswer);
@@ -163,27 +166,23 @@ function submitQuestionnaire() {
             }
         }
 
-        //获取城市ajax
-        $.ajax({
-            url: 'http://api.map.baidu.com/location/ip?ak=ia6HfFL660Bvh43exmH9LrI6',
-            type: 'POST',
-            dataType: 'jsonp',
-            success: function (data) {
-            }
-        });
+        // //获取城市ajax
+        // $.ajax({
+        //     url: 'http://api.map.baidu.com/location/ip?ak=ia6HfFL660Bvh43exmH9LrI6',
+        //     type: 'POST',
+        //     dataType: 'jsonp',
+        //     success: function (data) {
+        //     }
+        // });
         var da = {
-            'questionId': id,
-            'answerList': answerListFinal,
-            'answerTime': dateChange(timeStart),
-            'endTime': dateChange(timeEnd),
-            'ipAddress': ipAddress
+            'questionnaireId': id,
+            'accountId':answerId,
+            'info': answerListFinal,
+            'createTime': dateChange(timeEnd),
         };
         if (eORp == 'p') {
             da.answerPhone = contact;
             da.answerSource = 'phone';
-        } else if (eORp == "e") {
-            da.answerEmail = contact;
-            da.answerSource = 'email';
         } else if (eORp == "l") {
             da.answerSource = 'link';
         } else {
@@ -224,36 +223,31 @@ function queryQuestionnaireByIdSuccess(res) {
 function setQuestion(result) {
 
     layer.closeAll('loading');
-    var arr = result.data.questionName.split("");
+    var arr = result.data.info.split("");
     for(var i=0;i<arr.length;i++){
         if(arr[i]==="（"){
-            var questionName1 = result.data.questionName.split("（")[0];
-            var questionName2 = "（" + result.data.questionName.split("（")[1];
+            var questionName1 = result.data.name;
             $('#questionnaireTittle1').html(questionName1);
-            $('#questionnaireTittle2').html(questionName2);
             flag = "true";
             break;
         }else if(arr[i]==="("){
-            var questionName1 = result.data.questionName.split("(")[0];
-            var questionName2 = "（" + result.data.questionName.split("(")[1];
+            var questionName1 = result.data.name;
             $('#questionnaireTittle1').html(questionName1);
-            $('#questionnaireTittle2').html(questionName2);
             flag = "true";
         }
     }
 
     if(flag == "false"){
-        $('#questionnaireTittle1').html(result.data.questionName);
+        $('#questionnaireTittle1').html(result.data.name);
     }
 
-    $('.officialTips').html(result.data.questionContent);
-    questionList = JSON.parse(result.data.questionList);
+
+    questionList = JSON.parse(result.data.info);
     if(questionList!=null) {
         for (var i = 0; i < questionList.length; i++) {
             var questionType = questionList[i].questionType;
             switch (questionType) {
                 case "0": //单选
-                case "1": //多选
                     var question_div = '<div class="form-group" data-t="' + questionType + '"></div>';
                     var question_options = '<ul class="options" style="margin-left: 15px;"></ul>';
                     for (var j = 0; j < questionList[i].questionOption.length; j++) {
@@ -261,14 +255,31 @@ function setQuestion(result) {
                         var option_word = questionList[i].questionOption[j].optionWord;
                         //判断是多选还是单选
                         var inputType = 'radio';
-                        if (questionType == "1") {
+
+                            var li = '<li><label><input name="a' + i + '" type="' + inputType + '" '+ 'onclick=\'onclickCheckChoose(\"'+ (i + 1) +'","'+ (j + 1)  +'\")\''+ ' value=\"' + j + '\" class="' + inputType + '"><span style="margin-left: 5px;font-weight: 500;vertical-align: bottom;">' + option_word + '</span></label></li>';
+                            question_options = $(question_options).append(li);                //添加选项内容
+
+                    }
+                    question_options = $(question_options).append('<div class="clear"></div>');     //清除浮动
+                    if(questionList[i].important == "必答题") {
+                        question_div = $(question_div).append('<div><label><span class="req">*</span><span class="title">' + (i + 1) + '. ' + questionList[i].questionTitle + '</span></label></div>');        //添加标题
+                    }else {
+                        question_div = $(question_div).append('<div><label><span>&nbsp;&nbsp;&nbsp;</span><span class="title">' + (i + 1) + '. ' + questionList[i].questionTitle + '</span></label></div>');        //添加标题
+                    }
+                    question_div = $(question_div).append(question_options);      //添加选项
+                    $(".container-fluidT").append(question_div);
+                    break;
+                case "1": //多选
+                    var question_div = '<div class="form-group" data-t="' + questionType + '"></div>';
+                    var question_options = '<ul class="options" style="margin-left: 15px;"></ul>';
+                    for (var j = 0; j < questionList[i].questionOption.length; j++) {
+                        //题目选项
+                        var option_word = questionList[i].questionOption[j].optionWord;
+                        //判断是多选还是单选
+
                             inputType = 'checkbox';
                             var li = '<li><label><input name="a' + i + '" type="' + inputType + '" '+ 'onclick=\'onclickCheckChoose(\"'+ (i + 1) +'","'+ (j + 1)  +'\")\''+ ' value=\"' + j + '\" class="' + inputType + '"><span style="margin-left: 5px;font-weight: 500;vertical-align: bottom;">' + option_word + '</span></label></li>';
                             question_options = $(question_options).append(li);                //添加选项内容
-                        }else{
-                            var li = '<li><label><input name="a' + i + '" type="' + inputType + '" '+ 'onclick=\'onclickCheckChoose(\"'+ (i + 1) +'","'+ (j + 1)  +'\")\''+ ' value=\"' + j + '\" class="' + inputType + '"><span style="margin-left: 5px;font-weight: 500;vertical-align: bottom;">' + option_word + '</span></label></li>';
-                            question_options = $(question_options).append(li);                //添加选项内容
-                        }
 
                     }
                     question_options = $(question_options).append('<div class="clear"></div>');     //清除浮动
@@ -380,8 +391,8 @@ function getUrlInfo() {
         var contactBefore = info.split('&')[1];
         // eORp = contactBefore.split('=')[0];
         eORp = contactBefore.substr(0, 1);
-        if (eORp != 'e' && eORp != 'p' && eORp != 'zzz' && eORp != 'l') {
-            eORp = 'zzz'
+        if (eORp != 'e' && eORp != 'p' && eORp != 'preview' && eORp != 'l') {
+            eORp = 'preview'
         }
         // contact = contactBefore.split('=')[1];
         contact = contactBefore.substr(2).substring(0,16);
@@ -441,7 +452,7 @@ function onclickChoose(questionnaireId,problemId) {
         answerNum:problemId,
         questionId:id
     }
-    console.log(data)
+
     $.ajax({
         "async": false,
         "url": httpRequestUrl + url,

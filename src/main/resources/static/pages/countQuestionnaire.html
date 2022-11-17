@@ -99,7 +99,7 @@
                     <i class="icon resultsData-icon"></i>
                 </div>
                 <br>
-                <span class="items-name">分析&amp;下载</span>
+                <span class="items-name">分析</span>
                 <em class="caret-left"></em>
             </a>
         </div>
@@ -118,10 +118,6 @@
             </div>
             <div class="nav-show clearfix" id="toplabel">
                 <div class="nav-box clearfix" style="">
-                    <a class="nav-items pull-left" href="reviewAnswerQuestions.html">
-                        <label class="icon Answer4-icon"></label><br>
-                        <span>查看答题情况</span>
-                    </a>
 
                     <a class="nav-items pull-left clicked" href="countQuestionnaire.html">
                         <label class="icon Answer3-icon"></label><br>
@@ -269,25 +265,7 @@
                                         }
                                     }
                                 </script>
-                                <div class="count_analyse_container">
-                                    <div id="divFilter1" class="mrbg">
-                                        <div class="playSet">
-                                            <div class="head clearfix">
-                                                <div class="htit pull-left">
-                                                    <i></i><span style="text-decoration: underline;cursor:pointer;"
-                                                                 id="questionNameCount"
-                                                                 onclick="showChartSet();"></span>
-                                                </div>
-                                            </div>
-                                            <script>
-                                                function showChartSet() {
-                                                    var divChartSet = document.getElementById("divChartSet1");
-                                                    divChartSet.style.display = divChartSet.style.display == "none" ? "" : "none";
-                                                }
-                                            </script>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div id="divSumData1" class="the-end" style="width:766px;margin:0 auto">
                                     <div style="clear: both;"></div>
                                     <div id="ctl02_ContentPlaceHolder1_divStatData1">
@@ -316,70 +294,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="count_analyse_container">
-                                    <div id="divFilter" class="mrbg">
-                                        <div class="playSet">
-                                            <div class="head clearfix">
-                                                <div class="htit pull-left">
-                                                    <i></i><span style="text-decoration: underline;cursor:pointer;"
-                                                                 id="questionNameDetail"
-                                                                 onclick="showChartSet();"></span>
-                                                </div>
-                                                <div class="pull-right" id="countExcel" onclick="getReport()">
-                                                    <a href="javascript:void(0)"
-                                                       class="down btn1">下载此报告</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="divSumData" class="the-end" style="width:766px;margin:0 auto">
-                                    <div style="clear: both;"></div>
-                                    <div id="ctl02_ContentPlaceHolder1_divStatData">
-                                        <div class="title-item">
-                                            <div class="main-wrapper">
-                                                <div class="survey-wrapper clearfix">
-                                                    <div id="ctl01_ContentPlaceHolder1_searchPapaer"
-                                                         class="survey-create clearfix">
-                                                        <div id="ctl01_ContentPlaceHolder1_divInfo"
-                                                             class="create-search pull-left"
-                                                             style="margin-right:10px;">
-                                                            <input name="ctl01$ContentPlaceHolder1$txtName"
-                                                                   type="text" placeholder="请输入学校名称进行搜索..."
-                                                                   id="keyWord" class="serarchbox"
-                                                                   onfocus="if(placeholder=='请输入学校名称进行搜索...'){placeholder='';}"
-                                                                   onblur="if(placeholder==''){placeholder='请输入学校名称进行搜索...';}"
-                                                            >
 
-                                                            <div class="icon search-icon buttonboder"
-                                                                 onclick="getQuestionnaireAboutSchool()"></div>
 
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div style="margin: 10px auto;text-align:center;"
-                                                 class="Picsetting">
-                                                <!--表格位置-->
-                                                <table id="countTable">
-                                                </table>
-                                                <div style="clear:both;"></div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div style="padding:10px 0 10px;">
-
-                                    </div>
-                                    <div style="clear: both;">
-                                    </div>
-                                    <div style="padding-bottom:30px;">
-
-                                        <div class="divclear"></div>
-                                    </div>
-                                    <div class="divclear"></div>
-                                </div>
                             </div>
 
                             <div style="clear: both">

@@ -28,8 +28,6 @@ public class ReleasedQuestionnaire {
      */
     private String finishedTime;
 
-    private String style;
-
     private String type;
 
     /**
@@ -37,19 +35,11 @@ public class ReleasedQuestionnaire {
      */
     private int answers;
 
-    /**
-     * 答卷网址
-     */
-    private String url;
 
     private int state;
 
     private String info;
 
-    /**
-     * 目标答者
-     */
-    private String target;
 
     private String tenantId;
 }

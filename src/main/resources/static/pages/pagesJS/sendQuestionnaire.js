@@ -220,7 +220,6 @@ if(getCookie("changeTableType") == "shortMessageSend"){   //从已发问卷页�
 }
 
 createDtePicker();
-getQuestionInfo();
 var oTable = new TableInit();
 oTable.Init();
 
@@ -515,9 +514,6 @@ $('#image').change(function (e) {
 //发布问卷
 function layOutSend() {
 
-    //短信发送方式
-    if (sendType == '0') {
-
         if (shortMessageGetTime == '0') {
             sendTime = "";
         } else if (shortMessageGetTime == '1') {
@@ -538,94 +534,16 @@ function layOutSend() {
             layer.msg("请添加短信内容", {icon: 2});
         } else {
             layer.load(2, {time: 2 * 1000});
-            jQuery.ajax({
-                type: "POST",
-                url: httpRequestUrl + "/selSum",    //查短信条数
-                dataType: 'json',
-                contentType: "application/json",
-                success: function (result) {
-                    //console.log(result);
-                    //判断短信条数和上传的人数
-                    if (persons > result) {
-                        layer.msg("余额不足，无法发布", {icon: 2});
-                        layer.closeAll('loading');
-                    } else {
-                        var url = '/addSendQuestionnaire';
-                        var personsData = _$('#userInfoTable').bootstrapTable('getData');
-                        //短信发送问卷
-                        var data = {
-                            "questionnaireId": questionnaireId,           //问卷id
-                            "dataId": dataId,                    //问卷类型
-                            "releaseTime": sendTime,            //发送时间
-                            "sendType": sendType,                //发送类别，0短信，1邮件
-                            "context": sendContent,                 //短信内容
-                            "questionEndContent": endContent,        //答卷结束语
-                            "sendInfo": personsData                     //人员信息
-                        };
-                        setTimeout(function () {
-                            layer.msg("发送成功", {icon: 1});
-                        }, 2000);
-                        jQuery.ajax({
-                            "async": true,
-                            "url": httpRequestUrl + url,
-                            "type": "POST",
-                            "data": JSON.stringify(data),
-                            "dataType": "json",
-                            "contentType": "application/json",
-                            success: function (result) {
-                                //console.log(result);
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                //console.log(jqXHR);
-                                //console.log(textStatus);
-                                //console.log(errorThrown);
-                            }
-                        })
 
-                    }
-                }
-            });
-        }
-    } else if (sendType == '1') {   //邮箱发送方式
-        //邮件标题
-        var emailTitle = document.getElementById("ctl02_ContentPlaceHolder1_txtEmailTitle").value;
-        //邮件发送富文本内容
-        var emailContent = document.getElementById("ctl02_ContentPlaceHolder1_fckEmailContent");
-        emailContent = emailContent.value;
-        // //console.log(emailContent);
-        //发送问卷答题结束语
-        var endContent = document.getElementById("tipT").value;
-        // //console.log(endContent);
-
-        if (persons.length == 0) {
-            layer.msg("请添加调查人员信息", {
-                icon: 2
-            });
-        } else if (endContent == "") {
-            layer.msg("请添加答卷结束语", {icon: 2});
-        } else if (emailTitle == "") {
-            layer.msg("请添加邮件标题", {icon: 2});
-        } else if (emailContent == "") {
-            layer.msg("请添加邮件内容", {icon: 2});
-        } else if (emailContent.search("【联系人姓名】") == -1 || emailContent.search("【填写问卷地址】") == -1) {
-            layer.msg("请不要修改'【】'里的内容，系统将会根据问卷自动进行替换！", {icon: 2});
-        } else {
-            layer.load(2, {time: 2 * 1000});
-            var url = '/addSendQuestionnaire';
+            var url = '/questionnaire/release';
             var personsData = _$('#userInfoTable').bootstrapTable('getData');
-            //邮件发送问卷
+            //短信发送问卷
             var data = {
                 "questionnaireId": questionnaireId,           //问卷id
-                "dataId": dataId,                    //问卷类型
-                "releaseTime": "",            //发送时间
-                "sendType": sendType,                //发送类别，0短信，1邮件
-                "emailTitle": emailTitle,                //邮件标题
-                "context": emailContent,                 //邮件内容
-                "questionEndContent": endContent,        //答卷结束语
-                "sendInfo": personsData                     //人员信息
+                "releaseTime": sendTime,            //发送时间
             };
-            // layer.closeAll('loading');
             setTimeout(function () {
+
                 layer.msg("发送成功", {icon: 1});
             }, 2000);
             jQuery.ajax({
@@ -635,24 +553,16 @@ function layOutSend() {
                 "data": JSON.stringify(data),
                 "dataType": "json",
                 "contentType": "application/json",
-                success: function (result) {
-                    //console.log(result);
-                   if (result.code == "333") {
-                        layer.closeAll('loading');
-                        layer.msg(result.message, {icon: 2});
-                        setTimeout(function () {
-                            window.location.href = 'login.html';
-                        }, 1000)
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    //console.log(jqXHR);
-                    //console.log(textStatus);
-                    //console.log(errorThrown);
-                }
-            });
+            success: function (result) {
+
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+
+            }
+            })
         }
-    }
+
 }
 
 //保存问卷信息

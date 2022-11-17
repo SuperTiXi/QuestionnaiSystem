@@ -1,7 +1,6 @@
 /**
  * Created by Amy on 2018/8/13.
  */
-
 var questionnaireId = getCookie("questionnaireId")
 $(function () {
     $("#questionNameCount").html( getCookie("QuestionnaireName") + "数量统计");
@@ -86,7 +85,7 @@ function TableInit() {
     var oTableInit = new Object();
     //初始化Table
     oTableInit.Init = function () {
-        $('#countTable').bootstrapTable({
+        $('#analyseTable').bootstrapTable({
             url: httpRequestUrl + '/release/queryQuestionnaireById?=questionnaireId='+questionnaireId,         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
@@ -129,18 +128,8 @@ function TableInit() {
                     sortable: true
                 },
                 {
-                    field: 'answerNum',
-                    title: '答题人数',
-                    align: 'center',
-                    sortable: true
-                }, {
-                    field: 'answerTotal',
-                    title: '总人数',
-                    align: 'center',
-                    sortable: true
-                }, {
-                    field: 'rate',
-                    title: '答题率',
+                    field: 'answerInfo',
+                    title: '答题信息',
                     align: 'center',
                     sortable: true
                 }],
@@ -151,22 +140,41 @@ function TableInit() {
                     var questionList = questionnaire.info;
 
                     var data = {
-                        "questionnaireId":questionnaire.id
+                        'questionnaireId':questionnaireId
                     }
-                    commonAjaxPost(true,'/answer/getAnswerersCount',data,success)
+                    commonAjaxPost(true,'/release/getAnswersByQuestionnaire',data,success);
 
                     function success(res){
-                        for (let i = 0; i < questionList.length - 1; i++) {
-                            var object = {
-                                'question':questionList[i].questionTitle,
-                                'answerNum':questionnaire.answers,
-                                'answerTotal':res.data,
-                                'rate':(questionnaire.answers)/(res.data)
+                        if(res.code=="666"){
+                            var answerList = res.data;
+                            for (let i = 0; i < questionList.length - 1; i++) {
+                                var object = {
+                                    'question':questionList[i].questionTitle,
+                                    'answerInfo':''
+                                }
+                                var optionList = questionList[i].options;
+                                var optionCount = {};
+                                for (let j = 0; j < optionList.length - 1; j++) {
+                                    var count = 0;
+                                    for (let k = 0; k < answerList.length - 1; k++) {
+
+                                        if(answerList[i]==j){
+                                            count++;
+                                        }
+                                    }
+                                    optionCount.add(count+"&");
+                                }
+
+                                object.answerInfo = optionCount;
+                                _$("#analyseTable").bootstrapTable('insertRow', {index: i, row: object});
                             }
-                            _$('#countTable').bootstrapTable('insertRow', {index: i, row: object});
+                        }
+                        else {
+                            layer.msg(res.message);
                         }
                     }
                 }
+
             }
         });
     };

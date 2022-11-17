@@ -15,7 +15,6 @@ public interface GroupToAnswererMapper extends BaseMapper<GroupToAnswerer> {
     @Select("SELECT answerer_id FROM group_answerer WHERE group_id = #{groupId}")
     List<String> getAnswererByGroup(@Param("groupId") String groupId);
 
-
     @Delete("DELETE FROM group_answerer WHERE group_id = #{groupId} AND answerer_id = #{answererId}")
     Integer removeAnswererFromGroup(@Param("answererId") String answererId, @Param("groupId") String groupId);
 }

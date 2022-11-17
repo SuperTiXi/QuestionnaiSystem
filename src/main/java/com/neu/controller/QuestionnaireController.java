@@ -2,6 +2,7 @@ package com.neu.controller;
 
 import com.neu.bean.HttpResponseEntity;
 import com.neu.dao.entity.Questionnaire;
+import com.neu.dao.entity.ReleasedQuestionnaire;
 import com.neu.service.QuestionService;
 import com.neu.service.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,10 @@ public class QuestionnaireController {
     @RequestMapping(value = "/deleteQuestionnaires",method = RequestMethod.POST, headers = "Accept=application/json")
     public HttpResponseEntity deleteQuestionnaires(@RequestParam List<String> ids) {
         return questionnaireService.deleteQuestionnaires(ids);
+    }
+
+    @RequestMapping(value = "/release" , method = RequestMethod.POST, headers = "Accept=application/json")
+    public HttpResponseEntity release(@RequestBody ReleasedQuestionnaire releasedQuestionnaire) {
+        return questionnaireService.release(releasedQuestionnaire);
     }
 }

@@ -6,24 +6,27 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
 import com.neu.common.Constants;
+import com.neu.common.utils.CommonUtils;
 import com.neu.common.utils.UUIDUtil;
 import com.neu.dao.QuestionMapper;
 import com.neu.dao.QuestionnaireMapper;
+import com.neu.dao.ReleasedQuestionnaireMapper;
 import com.neu.dao.TenantToUserMapper;
 import com.neu.dao.entity.Group;
 import com.neu.dao.entity.Question;
 import com.neu.dao.entity.Questionnaire;
+import com.neu.dao.entity.ReleasedQuestionnaire;
 import com.neu.service.QuestionService;
 import com.neu.service.QuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.neu.common.Constants.*;
+import static com.neu.common.utils.DateUtil.DEF_DATE_FORMAT_STR;
 
 @Service
 public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Questionnaire> implements QuestionnaireService {
@@ -32,9 +35,10 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     QuestionnaireMapper questionnaireMapper;
     @Autowired
     QuestionService questionService;
-
     @Autowired
     TenantToUserMapper tenantToUserMapper;
+    @Autowired
+    ReleasedQuestionnaireMapper releasedQuestionnaireMapper;
     String[] ways = {"id", "name","type", "creator_id", "tenant_id","high_quality","state"};
     @Override
     public HttpResponseEntity createQuestionnaire(Questionnaire questionnaire) {
@@ -150,6 +154,40 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         }
         httpResponseEntity.setCode(DELETE_SUCCESS_CODE);
         httpResponseEntity.setMessage(DELETE_SUCCESS_MESSAGE);
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity release(ReleasedQuestionnaire releasedQuestionnaire) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        String id = releasedQuestionnaire.getQuestionnaireId();
+        String releaseTime = releasedQuestionnaire.getReleasedTime();
+        if (CommonUtils.stringIsEmpty(id)||CommonUtils.stringIsEmpty(releaseTime)) {
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(EMPTY_ERROR);
+            return httpResponseEntity;
+        }
+        Questionnaire questionnaire = query().eq("id", id).one();
+        releasedQuestionnaire.setState(1);
+        releasedQuestionnaire.setTenantId(questionnaire.getTenantId());
+        releasedQuestionnaire.setAnswers(0);
+        releasedQuestionnaire.setInfo(questionnaire.getInfo());
+        releasedQuestionnaire.setType(questionnaire.getType());
+
+        Date date = new Date();
+        releasedQuestionnaire.setReleasedTime(DateUtil.formatTime(date));
+
+        SimpleDateFormat dft=new SimpleDateFormat(DEF_DATE_FORMAT_STR);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(java.util.Calendar.HOUR_OF_DAY, 2);
+        releasedQuestionnaire.setFinishedTime(dft.format(calendar.getTime()));
+
+        try {
+            releasedQuestionnaireMapper.insert(releasedQuestionnaire);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return httpResponseEntity;
     }
 }

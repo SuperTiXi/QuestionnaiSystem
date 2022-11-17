@@ -6,19 +6,32 @@ import com.neu.common.Constants;
 import com.neu.common.utils.CommonUtils;
 import com.neu.common.utils.UUIDUtil;
 import com.neu.dao.AnswerMapper;
+import com.neu.dao.AnswererToQuestionnaireMapper;
+import com.neu.dao.ReleasedQuestionnaireMapper;
+import com.neu.dao.UserToGroupMapper;
 import com.neu.dao.entity.Answer;
+import com.neu.dao.entity.AnswererToQuestionnaire;
+import com.neu.dao.entity.ReleasedQuestionnaire;
 import com.neu.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.neu.common.Constants.*;
 
 @Service
 public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> implements AnswerService {
     @Autowired
-    AnswerService answerService;
-    @Autowired
     AnswerMapper answerMapper;
+    @Autowired
+    UserToGroupMapper userToGroupMapper;
+    @Autowired
+    AnswererToQuestionnaireMapper answererToQuestionnaireMapper;
+    @Autowired
+    ReleasedQuestionnaireMapper releasedQuestionnaireMapper;
+
     public HttpResponseEntity addAnswer(Answer answer) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         String info = answer.getInfo();
@@ -42,6 +55,51 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
         } catch (Exception e) {
             httpResponseEntity.setCode(INSERT_FAIL_CODE);
             httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
+        }
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity addGroupToQuestionnaire(String groupId, String questionnaireId) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        if (CommonUtils.stringIsEmpty(groupId)||CommonUtils.stringIsEmpty(questionnaireId)) {
+            httpResponseEntity.setCode(INSERT_FAIL_CODE);
+            httpResponseEntity.setMessage(EMPTY_ERROR);
+            return httpResponseEntity;
+        }
+
+        List<String> list = userToGroupMapper.queryUserByGroup(groupId);
+
+        try {
+            for (String userId : list) {
+                answererToQuestionnaireMapper.insert(new AnswererToQuestionnaire(userId, questionnaireId));
+            }
+
+            httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
+            httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
+        } catch (Exception e) {
+            httpResponseEntity.setCode(INSERT_FAIL_CODE);
+            httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
+            e.printStackTrace();
+        }
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity getAnswerersCount(String questionnaireId) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+
+        ReleasedQuestionnaire releasedQuestionnaire = releasedQuestionnaireMapper.selectById(questionnaireId);
+        Integer answererCount = releasedQuestionnaire.getAnswers();
+
+        if (answererCount==null) {
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+        }else {
+            httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+            httpResponseEntity.setData(answererCount);
+            httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
         }
 
         return httpResponseEntity;

@@ -8,4 +8,8 @@ import org.springframework.stereotype.Service;
 
 public interface AnswerService extends IService<Answer> {
     HttpResponseEntity addAnswer(Answer answer);
+
+    HttpResponseEntity addGroupToQuestionnaire(String groupId, String questionnaireId);
+
+    HttpResponseEntity getAnswerersCount(String questionnaireId);
 }

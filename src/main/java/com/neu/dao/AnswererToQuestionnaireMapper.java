@@ -16,8 +16,9 @@ public interface AnswererToQuestionnaireMapper extends BaseMapper<AnswererToQues
     List<String> getAnswererByQuestionnaireId (@Param("questionnaireId") String questionnaireId);
 
     @Select("SELECT questionnaire_id FROM answerer_questionnaire WHERE answerer_id = #{answererId}")
-    List<String> getAnswererByAnswererId (@Param("answererId") String answererId);
+    List<String> getQuestionnaireByAnswererId (@Param("answererId") String answererId);
 
     @Delete("DELETE FROM answerer_questionnaire WHERE questionnaire_id = #{questionnaireId} AND answerer_id = #{answererId}")
     Integer remove(@Param("questionnaireId") String questionnaireId, @Param("answererId") String answererId);
+
 }

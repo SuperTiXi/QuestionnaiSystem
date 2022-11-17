@@ -6,4 +6,9 @@ import com.neu.dao.entity.ReleasedQuestionnaire;
 
 public interface ReleasedQuestionnaireService extends IService<ReleasedQuestionnaire> {
     HttpResponseEntity getReleasedList(String userId);
+
+    HttpResponseEntity queryQuestionnaireById(String id);
+
+    HttpResponseEntity getAnswersByQuestionnaire(String id);
+
 }

@@ -9,6 +9,7 @@ import com.neu.common.Constants;
 import com.neu.common.utils.UUIDUtil;
 import com.neu.dao.QuestionMapper;
 import com.neu.dao.QuestionnaireMapper;
+import com.neu.dao.TenantToUserMapper;
 import com.neu.dao.entity.Group;
 import com.neu.dao.entity.Question;
 import com.neu.dao.entity.Questionnaire;
@@ -32,13 +33,18 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     @Autowired
     QuestionService questionService;
 
+    @Autowired
+    TenantToUserMapper tenantToUserMapper;
     String[] ways = {"id", "name","type", "creator_id", "tenant_id","high_quality","state"};
     @Override
     public HttpResponseEntity createQuestionnaire(Questionnaire questionnaire) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        String tenantId = tenantToUserMapper.queryTenantByUser(questionnaire.getCreatorId());
+        questionnaire.setTenantId(tenantId);
         questionnaire.setState(0);
         questionnaire.setId(UUIDUtil.getOneUUID());
         questionnaire.setCreateTime(DateUtil.now());
+
         try {
             for (Field field : questionnaire.getClass().getFields()) {
                 field.setAccessible(true);

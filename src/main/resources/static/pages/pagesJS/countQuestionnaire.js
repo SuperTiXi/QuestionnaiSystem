@@ -3,8 +3,7 @@
  */
 
 $(function () {
-    $("#questionNameCount").html( getCookie("nameOfQuestionnaire") + "数量统计");
-    $("#questionNameDetail").html( getCookie("nameOfQuestionnaire") + "学校答题情况明细");
+    $("#questionNameCount").html( getCookie("QuestionnaireName") + "数量统计");
 
     var oTable = new TableInit();
     oTable.Init();
@@ -37,7 +36,6 @@ $("#ddlActivitynew").change(function () {
         deleteCookie("nameOfQuestionnaire");
         setCookie("nameOfQuestionnaire", nameQuestion)
         $("#questionNameCount").html( getCookie("nameOfQuestionnaire") + "数量统计");
-        $("#questionNameDetail").html( getCookie("nameOfQuestionnaire") + "学校答题情况明细");
         getQuestionnaireCount();
         getQuestionnaireAboutSchool();
     }
@@ -78,10 +76,7 @@ function getQuestionnaireCount() {
     })
 }
 
-// XXX问卷学校答题情况明细
-function getQuestionnaireAboutSchool() {
-    $("#countTable").bootstrapTable('refresh');
-}
+
 
 
 
@@ -215,16 +210,7 @@ function TableInit() {
 
 
 
-function getReport() {
 
-    //下载报告
-    $("#countTable").tableExport({
-        type: "excel",
-        escape: "false",
-        fileName:  getCookie("nameOfQuestionnaire")+ '学校答题情况明细'
-    });
-
-}
 
 //设计问卷
 function designQuestionnaire() {

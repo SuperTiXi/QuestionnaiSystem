@@ -128,7 +128,6 @@ window.operateEvents = {
     }
 };
 
-
 // 表格中按钮
 function addFunctionAlty1(value, row, index) {
     var btnText = '';

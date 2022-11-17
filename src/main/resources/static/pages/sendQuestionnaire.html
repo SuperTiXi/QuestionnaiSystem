@@ -92,7 +92,7 @@
                     <i class="icon resultsData-icon"></i>
                 </div>
                 <br/>
-                <span class="items-name">分析&下载</span>
+                <span class="items-name">分析</span>
                 <em class="caret-left"></em>
             </a>
         </div>
@@ -174,69 +174,40 @@
                                             <div class="link-box clearfix" style="margin-top:0px;">
                                                 <div class="ui-dialog__section-setting">
                                                     <div class="ui-dialog__items ui-dialog__hidden" id="getDownLoadBtn" style="margin-bottom: 20px">
-                                                        <!--<a style="margin-right: 20px;" href="../答题人上传数据模板.xlsx" class="add__batches pull-left">下载模板</a>-->
-                                                        <!--href="javascript:void('0')"-->
-                                                        <!--onclick="addPhone(1);"-->
+
                                                         <a id="onloadFile" href="#" onclick="addFile()"
                                                            class="add__batches pull-left">批量添加答题人信息</a>
                                                         <input type="file" id="image" name="image"
                                                                style="display:none;"/>
-                                                        <!--<a onclick="return window.confirm(&quot;您确定清空收件人列表吗？&quot;);"-->
-                                                           <!--id="ctl02_ContentPlaceHolder1_btnDelete2" title="清空手机号码列表"-->
-                                                           <!--class="defaultColor underline pull-right"-->
-                                                           <!--href="javascript:__doPostBack('ctl02$ContentPlaceHolder1$btnDelete2','')">清空手机号码列表</a>-->
+
                                                     </div>
                                                     <div class="fillet-box overall__table ui-dialog__resetMargin">
                                                         <div>
                                                             <table id="userInfoTable"></table>
+                                                            <br>
                                                         </div>
                                                         <ul id="ctl02_ContentPlaceHolder1_divAdd" class="IM-address">
                                                         </ul>
-                                                        <!--<div id="ctl02_ContentPlaceHolder1_lmlpage" class="text-center">-->
-                                                            <!--<div class="page-box page-box-myquestion"-->
-                                                                 <!--style="color: #808080; font-size: 14px; height: 30px;">-->
-                                                                <!--<div id="ctl02_ContentPlaceHolder1_pagehttml"-->
-                                                                     <!--class="page-list pager-linkpage">-->
-                                                                    <!--<a id="ctl02_ContentPlaceHolder1_btnFirst"-->
-                                                                       <!--disabled="disabled" class="page-first disabled"-->
-                                                                       <!--alt="第一页"></a>-->
-                                                                    <!--<a id="ctl02_ContentPlaceHolder1_btnPre"-->
-                                                                       <!--disabled="disabled" class="page-up disabled"-->
-                                                                       <!--alt="上一页"></a>-->
 
-                                                                    <!--第1/1页-->
-
-                                                                    <!--<a id="ctl02_ContentPlaceHolder1_btnNext"-->
-                                                                       <!--disabled="disabled" class="page-down disabled"-->
-                                                                       <!--alt="下一页"></a>-->
-
-                                                                    <!--<a id="ctl02_ContentPlaceHolder1_btnLast"-->
-                                                                       <!--disabled="disabled" class="page-last disabled"-->
-                                                                       <!--alt="最后一页"></a>-->
-
-                                                                <!--</div>-->
-                                                            <!--</div>-->
-                                                        <!--</div>-->
                                                     </div>
                                                 </div>
-                                                <!--<script>-->
-                                                    <!--var openShareWxProgram = document.getElementById("ctl02_ContentPlaceHolder1_openShareWxProgram");-->
-                                                    <!--if (openShareWxProgram) {-->
-                                                        <!--openShareWxProgram.addEventListener("click", function () {-->
-                                                            <!--layer.open({-->
-                                                                <!--type: 2,-->
-                                                                <!--isOutAnim: false,-->
-                                                                <!--title: false,-->
-                                                                <!--maxmin: false,-->
-                                                                <!--shadeClose: true, //点击遮罩关闭层-->
-                                                                <!--area: ['360px', '528px'],-->
-                                                                <!--content: ['/wjx/design/ActivityWxAppQrCode.aspx?activity=' + 26556304, 'no']-->
-                                                            <!--});-->
-                                                        <!--})-->
-                                                    <!--}-->
 
+                                                <div class="ui-dialog__section-setting">
+                                                    <div class="ui-dialog__items ui-dialog__hidden" id="getBtn" style="margin-bottom: 20px">
 
-                                                <!--</script>-->
+                                                        <a id="addGroup" href="#" class="add__batches pull-left">添加群组</a>
+
+                                                    </div>
+                                                    <div class="fillet-box overall__table ui-dialog__resetMargin">
+                                                        <div>
+                                                            <table id="groupInfoTable"></table>
+                                                        </div>
+                                                        <ul id="ctl02_ContentPlaceHolder1_groupAdd" class="IM-address">
+                                                        </ul>
+
+                                                    </div>
+                                                </div>
+
                                                 <style>
                                                     .beautify-wrap {
                                                         clear: both;

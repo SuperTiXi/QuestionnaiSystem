@@ -41,9 +41,9 @@
         <div class="user-box">
             <input type="text" placeholder="请选择" list="Identity">
             <datalist id="Identity">
-                <option>用户</option>
-                <option>租户</option>
-                <option>答者</option>
+                <option value="user">用户</option>
+                <option value="tenant">租户</option>
+                <option >答者</option>
             </datalist>
             <label>身份</label>
         </div>
@@ -73,27 +73,37 @@
         var userName = document.getElementById("UserName");
         var password = document.getElementById("PassWord");
         var rePassword = document.getElementById("rPassWord");
+        var iBuffer = document.getElementById("Identity");
         if (password.val!==rePassword.val){
             alert("两次输入的密码不一致！");
             return;
         }
-        var iBuffer =document.getElementById("Identity");
+        console.log(iBuffer);
+        console.log(iBuffer.val);
+        var Qusetion = document.getElementById("Question");
+        var Answer = document.getElementById("Answer");
+
         var iden;
-        if (iBuffer.val==='租户') iden=1;
-        else if (iBuffer.val==='用户') iden=2;
+        if (iBuffer.val==='tenant') iden=1;
+        else if (iBuffer.val==='user') iden=2;
         else iden=3;
 
         var url = '/account/register';
+        var info = {
+            "Question": Qusetion.value,
+            "Answer": Answer.value,
+        }
         var data = {
-            "username": userName.value,
+            "userName": userName.value,
             "name": document.getElementById("Name").value,
             "password": password.value,
             "identity": iden,
             "phone": document.getElementById("Phone").value,
             //"status" : 1,
-            //"info":document.getElementById("Question"), //修改
-            //"tenantId": getCookie("tenantId")
+            "info": info
+            // "tenantId": getCookie("tenantId")
         };
+        console.log(data)
         commonAjaxPost(true, url, data, function (result) {
             if (result.code == "666") {
                 layer.msg("用户创建成功，权限已开启", {icon: 1});

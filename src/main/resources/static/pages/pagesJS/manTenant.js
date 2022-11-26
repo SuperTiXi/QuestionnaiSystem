@@ -1,7 +1,7 @@
 $(function () {
     isLoginFun();
     header();
-     $("#ctl01_lblUserId").text(getCookie('userId'));
+    $("#ctl01_lblUserId").text(getCookie('userId'));
     var oTable = new TableInit();
     oTable.Init();
 });
@@ -16,7 +16,7 @@ function TableInit() {
     //初始化Table
     oTableInit.Init = function () {
         $('#userTable').bootstrapTable({
-            url: httpRequestUrl + '/tenant/list?tenantId='+getCookie("tenantId"),         //请求后台的URL（*）
+            url: httpRequestUrl + '/admin/list',         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -52,10 +52,10 @@ function TableInit() {
                     }
                 },
                 {
-                field: 'username',
-                title: '用户名',
-                align: 'center',
-            },
+                    field: 'username',
+                    title: '用户名',
+                    align: 'center',
+                },
                 {
                     field: 'name',
                     title: '昵称',
@@ -81,7 +81,7 @@ function TableInit() {
                     formatter: addFunctionAlty//表格中增加按钮
                 }],
             responseHandler: function (res) {
-                 console.log(res);
+                console.log(res);
                 if(res.code === "666"){
                     // var userInfo=JSON.parse('[{"username":"asd","name":"s","phone":"123456"},{"username":"zxc","name":"z","phone":"123456"},{"username":"qwe","name":"q","phone":"123456"}]');
                     var userInfo = res.data;
@@ -134,8 +134,8 @@ function TableInit() {
 window.operateEvents = {
     //编辑
     'click #btn_count': function (e, value, row, index) {
-        // ind = row.id;
-        // $.cookie('userIndex', ind);
+        ind = row.id;
+        $.cookie('userIndex', ind);
     }
 };
 
@@ -162,18 +162,18 @@ function addFunctionAlty(value, row, index) {
 
 function toExamUserInfo(id){
     setCookie("userIndex",id)
-    window.location.href = "examUserInf.html" //界面跳转
+    window.location.href = "../pages/examTenantInf.html" //界面跳转
 }
 
 function toTenantModUserInf(userName){
     setCookie("userName",userName)
-    window.location.href = "tenantModUserInf.html" //界面跳转
+    window.location.href = "../pages/adminModTenantInf.html" //界面跳转
 }
 
 // 修改用户状态（禁用、开启）
 function changeStates(id) {
     //var url = '/tenant/list?tenantId='+getCookie("tenantId");
-    var url = '/tenant/list';
+    var url = '/admin/list';
     var data = {"tenantId": getCookie("tenantId")};
     commonAjaxGet(true, url, data, changeUserStates);
 
@@ -184,7 +184,7 @@ function changeStates(id) {
             var userInfo = result.data[id];
             console.log(userInfo);
             var state=userInfo.state;
-            var url=(state===0?'/tenant/recover':'/tenant/delete')
+            var url=(state===0?'/admin/recover':'/admin/delete')
             var da = {
                 'userName':userInfo.userName,
                 'phone':userInfo.phone
@@ -198,7 +198,7 @@ function changeStates(id) {
         } else if (result.code === "333") {
             layer.msg(result.message, {icon: 2});
             setTimeout(function () {
-                window.location.href = '/manUser.html';
+                window.location.href = '/manTenant.html';
             }, 1000)
         } else {
             layer.msg(result.message, {icon: 2})

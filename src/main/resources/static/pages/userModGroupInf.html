@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改群组信息</title>
+    <link href="pagesCss/login.css" rel="stylesheet" type="text/css">
+    <link href="../images/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+<div class="login-box">
+    <h2>修改信息</h2>
+    <form>
+        <div class="user-box">
+            <input type="text" name="Name" id="Name">
+            <label>群组名</label>
+        </div>
+        <div class="user-box">
+            <input type="text" name="description" id="description">
+            <label>群组描述</label>
+        </div>
+        <a href="#" onclick="modGroup()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            确定
+        </a>
+        <label>-----------------------===</label>
+        <a href="#" onclick="returnToManGroup()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            返回
+        </a>
+
+    </form>
+</div>
+<script type="text/javascript" defer="true">
+    function modGroup() {
+        var name = document.getElementById("Name");
+        var description = document.getElementById("description");
+        var myDate = new Date();	//创建Date对象
+        var Y = myDate.getFullYear();   //获取当前完整年份
+        var M = myDate.getMonth() + 1;  //获取当前月份
+        var D = myDate.getDate();   //获取当前日1-31
+        var H = myDate.getHours();  //获取当前小时
+        var i = myDate.getMinutes();    //获取当前分钟
+        var s = myDate.getSeconds();    //获取当前秒数
+        // 月份不足10补0
+        if(M < 10){
+            M = '0' + M;
+        }
+        // 日不足10补0
+        if(D < 10){
+            D = '0' + D;
+        }
+        // 小时不足10补0
+        if(H < 10){
+            H = '0' + H;
+        }
+        // 分钟不足10补0
+        if(i < 10){
+            i = '0' + i;
+        }
+        // 秒数不足10补0
+        if(s < 10){
+            s = '0' +s;
+        }
+        // 拼接日期分隔符根据自己的需要来修改
+        var nowDate = Y+'-'+M+'-'+D+' '+H+':'+i+':'+s;
+
+        if (!name.value){
+            alert("群组名不能为空！");
+            return;
+        }
+        if (!description.value){
+            alert("群组描述不能为空！");
+            return;
+        }
+        var url = '/user/modify';
+        var data = {
+            "name": document.getElementById("Name").value,
+            "description": document.getElementById("description").value,
+            "createTime": nowDate,
+            "tenantId": getCookie("tenantId"),
+            "state" : 1,
+        };
+        commonAjaxPost(true, url, data, function (result) {
+            if (result.code == "666") {
+                layer.msg("群组修改成功，权限已开启", {icon: 1});
+                setTimeout(function () {
+                    window.location.href = 'manGroup.html';
+                }, 1000)
+            }else if(result.code == "50003"){
+                //用户名已存在
+                layer.msg(result.message, {icon: 2});
+            } else if (result.code == "333") {
+                layer.msg(result.message, {icon: 2});
+                setTimeout(function () {
+                    window.location.href = 'manGroup.html';
+                }, 1000)
+            } else {
+                layer.msg(result.message, {icon: 2});
+            }
+        })
+
+    }
+
+    function returnToManGroup(){
+        window.location.href = "manGroup.html" //界面跳转
+    }
+</script>
+<script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+<script src="../js/zhezhao.js?v=3" type="text/javascript"></script>
+<script src="../plugins/layer/layer.js"></script>
+<script src="../plugins/cookie/jquery.cookie.js"></script>
+<script src="../common/common.js"></script>
+</body>
+</html>

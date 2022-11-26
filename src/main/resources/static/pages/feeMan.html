@@ -49,11 +49,11 @@
             <span class="spanTitle" id="IdSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
         <h1>
-            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">我的费用:</label>
+            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">我的余额:</label>
             <span class="spanTitle" id="feeSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
         <h1>
-            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">我的余额:</label>
+            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">我的费用:</label>
             <span class="spanTitle" id="balanceSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
         <h1>
@@ -97,7 +97,8 @@
         };
         commonAjaxPost(true,url,da,function (){
             alert("已支付"+money.value+"元");
-            getUserList()
+
+            window.location.href = "feeMan.html" //界面跳转
         })
     }
     function returnToManUser(){

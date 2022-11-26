@@ -63,7 +63,8 @@
             "phone":Phone.value,
             "code":Code.value
         };
-        commonAjaxPost(true, "/admin/loginByPhone", da, loginSuccess)
+        console.log(da);
+        commonAjaxPost(true, "/account/loginByPhone", da, loginSuccess)
         //window.location.href = "index.html" //界面跳转
     }
 
@@ -71,12 +72,17 @@
     function loginSuccess(result) {
         if (result.code == '666') {
             // layer.msg(result.message, {icon:1});
-            // setCookie('isLogin','1');
-            // setCookie('userId',result.data.id);
-            // setCookie('userName',UserNameText);
-            // setCookie('power',result.data.role);
-            // setCookie('modelId',result.data.modelId)
-            window.location.href = "index.html" //界面跳转
+            setCookie('isLogin','1');
+            if (result.data.identity===1) {
+                setCookie('tenantId',result.data.id);
+                window.location.href = "manUser.html" //界面跳转
+            }else if(result.data.identity===2){
+                setCookie('userId',result.data.id);
+                window.location.href = "manGroup.html"
+            }else if(result.data.identity===0){
+                setCookie('adminId',result.data.id);
+                window.location.href = "manTenant.html";
+            }
         } else {
             //layer.msg("此用户不存在",{icon:2});
             $('#errorMsgBox').show()
@@ -96,8 +102,8 @@
         var da = {
             "phone":Phone.value
         };
-        commonAjaxPost(true, "/admin/sendCode", da)
-        alert("发送成功！")
+        commonAjaxPost(true, "/account/sendCode", da)
+
     }
 </script>
 <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>

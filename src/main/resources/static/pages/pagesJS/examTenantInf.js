@@ -9,7 +9,7 @@ $(function () {
 // 查看用户详细信息
 function getUserInfo() {
     //var url = '/tenant/list?tenantId='+getCookie("tenantId");
-    var url = '/tenant/list';
+    var url = '/admin/list';
     var data={"tenantId":getCookie("tenantId")};
     commonAjaxGet(true, url,data,getUserInfoSuccess);
 

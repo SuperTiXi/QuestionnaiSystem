@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>添加群组</title>
+  <link href="pagesCss/login.css" rel="stylesheet" type="text/css">
+  <link href="../images/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+<div class="login-box">
+  <h2>添加新群组</h2>
+  <form>
+    <div class="user-box">
+      <input type="text" name="name" id="name">
+      <label>群组名</label>
+    </div>
+    <div class="user-box">
+      <input type="text" name="description" id="description">
+      <label>描述</label>
+    </div>
+
+    <a href="#" onclick="regNewGroup()" >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      确定
+    </a>
+    <label>-----------------------===</label>
+    <a href="#" onclick="returnToManGroup()" >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      返回
+    </a>
+  </form>
+</div>
+<script type="text/javascript" defer="true">
+  function regNewGroup() {
+    var name = document.getElementById("name");
+    var description = document.getElementById("description");
+    if (!name.value){
+      alert("群组名不能为空");
+      return;
+    }
+    if (!description.value){
+      alert("群组描述不能为空");
+      return;
+    }
+    var url = '/user/insert';
+
+    var data = {
+      "name": name.value,
+      "description": description.value,
+      "userId": getCookie("userId"),
+    };
+    console.log(data);
+    commonAjaxPost(true, url, data, function (result) {
+      if (result.code == "666") {
+        layer.msg("群组创建成功，权限已开启", {icon: 1});
+        setTimeout(function () {
+          window.location.href = 'manGroup.html';
+        }, 1000)
+      }else if (result.code == "333") {
+        layer.msg(result.message, {icon: 2});
+        setTimeout(function () {
+          window.location.href = 'manGroup.html';
+        }, 1000)
+      } else {
+        layer.msg(result.message, {icon: 2});
+      }
+    })
+  }
+
+  function returnToManGroup(){
+    window.location.href = "manGroup.html" //界面跳转
+  }
+</script>
+<script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+<script src="../js/zhezhao.js?v=3" type="text/javascript"></script>
+<script src="../plugins/layer/layer.js"></script>
+<script src="../plugins/cookie/jquery.cookie.js"></script>
+<script src="../common/common.js"></script>
+</body>
+</html>

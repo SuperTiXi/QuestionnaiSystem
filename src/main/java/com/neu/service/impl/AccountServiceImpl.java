@@ -134,6 +134,14 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             httpResponseEntity.setMessage(EMPTY_ERROR);
             return httpResponseEntity;
         }
+
+        if (RegexUtils.isPhoneInvalid(phone)) {
+            // 如果不符合，返回错误信息
+            httpResponseEntity.setCode(LOGIN_FAIL_CODE);
+            httpResponseEntity.setMessage(PHONE_ERROR);
+            return httpResponseEntity;
+        }
+
         Account account = query().eq("phone", phone).eq("state",1).one();
 
         if (RegexUtils.isPhoneInvalid(phone)) {
@@ -414,7 +422,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         if(answerer.isEmpty()){
             httpResponseEntity.setCode(QUERY_FAIL_CODE);
-            httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
 
             return httpResponseEntity;
         }
@@ -429,7 +437,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
 
         httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
-        httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
         httpResponseEntity.setData(accounts);
 
         return httpResponseEntity;

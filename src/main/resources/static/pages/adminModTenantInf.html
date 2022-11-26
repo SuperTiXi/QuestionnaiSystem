@@ -2,18 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>添加用户</title>
+    <title>修改用户信息</title>
     <link href="pagesCss/login.css" rel="stylesheet" type="text/css">
     <link href="../images/favicon.ico" rel="shortcut icon">
 </head>
 <body>
 <div class="login-box">
-    <h2>添加新用户</h2>
+    <h2>修改信息</h2>
     <form>
-        <div class="user-box">
-            <input type="text" name="UserName" id="UserName">
-            <label>用户名</label>
-        </div>
         <div class="user-box">
             <input type="text" name="Name" id="Name">
             <label>昵称</label>
@@ -38,19 +34,15 @@
             <input type="text" name="Answer" id="Answer">
             <label>密保答案</label>
         </div>
-        <div class="user-box">
-            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">身份：用户</label>
-        </div>
 
 
-        <a href="#" onclick="regNewUser()" >
+        <a href="#" onclick="modUser()" >
             <span></span>
             <span></span>
             <span></span>
             <span></span>
             确定
         </a>
-        <label>-----------------------===</label>
         <a href="#" onclick="returnToManUser()" >
             <span></span>
             <span></span>
@@ -58,11 +50,11 @@
             <span></span>
             返回
         </a>
+
     </form>
 </div>
 <script type="text/javascript" defer="true">
-    function regNewUser() {
-        var userName = document.getElementById("UserName");
+    function modUser() {
         var password = document.getElementById("PassWord");
         var rePassword = document.getElementById("rPassWord");
         var question = document.getElementById("Question");
@@ -71,26 +63,26 @@
             alert("两次输入的密码不一致！");
             return;
         }
-        var url = '/tenant/insert';
         var info = {
             "question":question.value,
             "answer":answer.value
         }
+        var url = '/admin/modify';
         var data = {
-            "userName": userName.value,
+            "userName": getCookie("userName"),
             "name": document.getElementById("Name").value,
             "password": password.value,
-            //"identity": 1,
+            "identity": 1,
             "phone": document.getElementById("Phone").value,
-            //"status" : 1,N
+            "state" : 1,
             "info":JSON.stringify(info), //修改
             "tenantId": getCookie("tenantId")
         };
         commonAjaxPost(true, url, data, function (result) {
             if (result.code == "666") {
-                layer.msg("用户创建成功，权限已开启", {icon: 1});
+                layer.msg("租户修改成功，权限已开启", {icon: 1});
                 setTimeout(function () {
-                    window.location.href = 'manUser.html';
+                    window.location.href = 'manTenant.html';
                 }, 1000)
             }else if(result.code == "50003"){
                 //用户名已存在
@@ -98,16 +90,18 @@
             } else if (result.code == "333") {
                 layer.msg(result.message, {icon: 2});
                 setTimeout(function () {
-                    window.location.href = 'manUser.html';
+                    window.location.href = 'manTenant.html';
                 }, 1000)
             } else {
                 layer.msg(result.message, {icon: 2});
             }
         })
+
+        //window.location.href = "loginByUserName.html" //界面跳转
     }
 
     function returnToManUser(){
-        window.location.href = "manUser.html" //界面跳转
+        window.location.href = "manTenant.html" //界面跳转
     }
 </script>
 <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>

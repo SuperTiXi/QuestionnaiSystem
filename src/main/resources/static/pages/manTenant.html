@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="pagesCss/manUser.css" rel="stylesheet" type="text/css">
+    <link href="../images/favicon.ico" rel="shortcut icon">
+    <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../plugins/bootstrap-table/js/bootstrap-table.js"></script>
+    <script src="../plugins/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>
+    <script src="../plugins/layer/layer.js"></script>
+    <script src="../plugins/cookie/jquery.cookie.js"></script>
+    <script src="../common/common.js"></script>
+    <script src="pagesJS/manTenant.js"></script>
+    <title>租户管理</title>
+</head>
+<body>
+<h1 >租户管理 </h1>
+<h2>租户列表</a></h2>
+<h1>
+    <div align="left"><label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <button class="buttonL" onclick="toAddNewTenant()">添加租户</button>
+
+        <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+        <input class="user-box" type="text" name="searchUN" id="searchUN" placeholder="在此输入租户名">
+        <button class="buttonL" onclick="searchFun()">搜索</button>
+    </div>
+</h1>
+<table id="userTable" class="container">
+    <!--    <thead>-->
+    <!--    <tr>-->
+    <!--        <th><h1>用户名</h1></th>-->
+    <!--        <th><h1>昵称</h1></th>-->
+    <!--        <th><h1>手机号</h1></th>-->
+    <!--        <th><h1>状态</h1></th>-->
+    <!--        <th><h1>操作</h1></th>-->
+    <!--    </tr>-->
+    <!--    </thead>-->
+    <!--    <tbody>-->
+    <!--    <tr>-->
+    <!--        <td>Google</td>-->
+    <!--        <td>9518</td>-->
+    <!--        <td>6369</td>-->
+    <!--        <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+    <!--        <td style="width: 150px">-->
+    <!--            <button class="button" onclick="">查看</button>-->
+    <!--            <button class="button" onclick="">修改</button>-->
+    <!--        </td>-->
+    <!--    </tr>-->
+    <!--    <tr>-->
+    <!--        <td>Twitter</td>-->
+    <!--        <td>7326</td>-->
+    <!--        <td>10437</td>-->
+    <!--        <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+    <!--        <td style="width: 150px">-->
+    <!--            <button class="button" onclick="">查看</button>-->
+    <!--            <button class="button" onclick="">修改</button>-->
+    <!--        </td>-->
+    <!--    </tr>-->
+    <!--    <tr>-->
+    <!--        <td>Amazon</td>-->
+    <!--        <td>4162</td>-->
+    <!--        <td>5327</td>-->
+    <!--        <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+    <!--        <td style="width: 150px">-->
+    <!--            <button class="button" onclick="">查看</button>-->
+    <!--            <button class="button" onclick="">修改</button>-->
+    <!--        </td>-->
+    <!--    </tr>-->
+    <!--    <tr>-->
+    <!--        <td>LinkedIn</td>-->
+    <!--        <td>3654</td>-->
+    <!--        <td>2961</td>-->
+    <!--        <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+    <!--        <td style="width: 150px">-->
+    <!--            <button class="button" onclick="">查看</button>-->
+    <!--            <button class="button" onclick="">修改</button>-->
+    <!--        </td>-->
+    <!--    </tr>-->
+    <!--    <tr>-->
+    <!--        <td>CodePen</td>-->
+    <!--        <td>2002</td>-->
+    <!--        <td>4135</td>-->
+    <!--        <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+    <!--        <td style="width: 150px">-->
+    <!--            <button class="button" onclick="">查看</button>-->
+    <!--            <button class="button" onclick="">修改</button>-->
+    <!--        </td>-->
+    <!--    </tr>-->
+    <!--    <tr>-->
+    <!--        <td>GitHub</td>-->
+    <!--        <td>4623</td>-->
+    <!--        <td>3486</td>-->
+    <!--        <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+    <!--        <td style="width: 150px">-->
+    <!--            <button class="button" onclick="">查看</button>-->
+    <!--            <button class="button" onclick="">修改</button>-->
+    <!--        </td>-->
+    <!--    </tr>-->
+    <!--    </tbody>-->
+</table>
+<script>
+    function toAddNewTenant(){
+        window.location.href = "addNewTenant.html" //界面跳转
+    }
+
+    function toFeeMan(){
+        window.location.href = "feeMan.html" //界面跳转
+    }
+
+    function searchFun() {
+
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="pagesCss/manUser.css" rel="stylesheet" type="text/css">
+  <link href="../images/favicon.ico" rel="shortcut icon">
+  <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../plugins/bootstrap-table/js/bootstrap-table.js"></script>
+  <script src="../plugins/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>
+  <script src="../plugins/layer/layer.js"></script>
+  <script src="../plugins/cookie/jquery.cookie.js"></script>
+  <script src="../common/common.js"></script>
+  <script src="pagesJS/manGroup.js"></script>
+  <title>问卷管理系统</title>
+</head>
+<body>
+<h1 >群组管理 </h1>
+
+<h1>
+  <div align="left"><label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+    <button class="buttonL" onclick="toAddNewGroup()">添加群组</button>
+    <button class="buttonL" onclick="">添加答者</button>
+    <button class="buttonL" onclick="">问卷管理</button>
+    <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+    <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+    <input class="user-box" type="text" name="searchUN" id="searchUN" placeholder="在此输入群组名名称">
+    <button class="buttonL" onclick="">搜索</button>
+  </div>
+</h1>
+<table id="userTable" class="container">
+<!--      <thead>-->
+<!--      <tr>-->
+<!--          <th><h1>群组名</h1></th>-->
+<!--          <th><h1>群组描述</h1></th>-->
+<!--          <th><h1>开启时间</h1></th>-->
+<!--          <th><h1>状态</h1></th>-->
+<!--          <th><h1>操作</h1></th>-->
+<!--      </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      <tr>-->
+<!--          <td>Google</td>-->
+<!--          <td>啊大大大</td>-->
+<!--          <td>2022-11-02 14:39:56</td>-->
+<!--          <td style="width: 100px"><button class="button" onclick="openManGroupStop()">停用</button></td>-->
+<!--          <td style="width: 150px">-->
+<!--              <button class="button" onclick="">查看</button>-->
+<!--              <button class="button" onclick="">修改</button>-->
+<!--          </td>-->
+<!--      </tr>-->
+<!--      <tr>-->
+<!--          <td>Twitter</td>-->
+<!--          <td>埃隆马斯克成为ceo</td>-->
+<!--          <td>2022-11-02 14:41:34</td>-->
+<!--          <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+<!--          <td style="width: 150px">-->
+<!--              <button class="button" onclick="">查看</button>-->
+<!--              <button class="button" onclick="">修改</button>-->
+<!--          </td>-->
+<!--      </tr>-->
+<!--      <tr>-->
+<!--          <td>Amazon</td>-->
+<!--          <td>如何评价大学生自习情况</td>-->
+<!--          <td>2022-11-02 14:43:32</td>-->
+<!--          <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+<!--          <td style="width: 150px">-->
+<!--              <button class="button" onclick="">查看</button>-->
+<!--              <button class="button" onclick="">修改</button>-->
+<!--          </td>-->
+<!--      </tr>-->
+<!--      <tr>-->
+<!--          <td>LinkedIn</td>-->
+<!--          <td>当代大学生应该怎么线上学习</td>-->
+<!--          <td>2022-11-07 19:12:39</td>-->
+<!--          <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+<!--          <td style="width: 150px">-->
+<!--              <button class="button" onclick="">查看</button>-->
+<!--              <button class="button" onclick="">修改</button>-->
+<!--          </td>-->
+<!--      </tr>-->
+<!--      <tr>-->
+<!--          <td>CodePen</td>-->
+<!--          <td>如何学习VUE</td>-->
+<!--          <td>2022-11-07 11:29:12</td>-->
+<!--          <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+<!--          <td style="width: 150px">-->
+<!--              <button class="button" onclick="">查看</button>-->
+<!--              <button class="button" onclick="">修改</button>-->
+<!--          </td>-->
+<!--      </tr>-->
+<!--      <tr>-->
+<!--          <td>GitHub</td>-->
+<!--          <td>开源</td>-->
+<!--          <td>2022-11-08 16:12:56</td>-->
+<!--          <td style="width: 100px"><button class="button" onclick="">停用</button></td>-->
+<!--          <td style="width: 150px">-->
+<!--              <button class="button" onclick="">查看</button>-->
+<!--              <button class="button" onclick="openModifyGroup()">修改</button>-->
+<!--          </td>-->
+<!--      </tr>-->
+<!--      </tbody>-->
+</table>
+<script>
+  function toAddNewGroup(){
+    window.location.href = "addNewGroup.html" //界面跳转
+  }
+</script>
+</body>
+</html>

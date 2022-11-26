@@ -47,7 +47,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         List<String> groupIds = userToGroupMapper.queryGroupByUser(userId);
         if(groupIds.isEmpty()){
             httpResponseEntity.setCode(QUERY_FAIL_CODE);
-            httpResponseEntity.setCode(QUERY_FAIL_MESSAGE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
 
             return httpResponseEntity;
         }
@@ -62,7 +62,7 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         }
 
         httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
-        httpResponseEntity.setCode(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
         httpResponseEntity.setData(groups);
 
         return httpResponseEntity;

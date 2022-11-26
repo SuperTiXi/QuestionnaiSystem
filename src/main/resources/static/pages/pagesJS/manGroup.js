@@ -1,7 +1,7 @@
 $(function () {
     isLoginFun();
     header();
-     $("#ctl01_lblUserId").text(getCookie('userId'));
+    $("#ctl01_lblUserId").text(getCookie('userId'));
     var oTable = new TableInit();
     oTable.Init();
 });
@@ -16,7 +16,7 @@ function TableInit() {
     //初始化Table
     oTableInit.Init = function () {
         $('#userTable').bootstrapTable({
-            url: httpRequestUrl + '/tenant/list?tenantId='+getCookie("tenantId"),         //请求后台的URL（*）
+            url: httpRequestUrl + '/user/list?userId=' + getCookie("userId"),         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -52,18 +52,23 @@ function TableInit() {
                     }
                 },
                 {
-                field: 'username',
-                title: '用户名',
-                align: 'center',
-            },
-                {
                     field: 'name',
-                    title: '昵称',
+                    title: '群组名',
                     align: 'center',
                 },
                 {
-                    field: 'phone',
-                    title: '手机号',
+                    field: 'description',
+                    title: '描述',
+                    align: 'center',
+                },
+                {
+                    field: 'createTime',
+                    title: '时间',
+                    align: 'center'
+                },
+                {
+                    field: 'tenantId',
+                    title: '所属租户',
                     align: 'center'
                 },
                 {
@@ -81,24 +86,25 @@ function TableInit() {
                     formatter: addFunctionAlty//表格中增加按钮
                 }],
             responseHandler: function (res) {
-                 console.log(res);
+                console.log(res);
                 if(res.code === "666"){
-                    // var userInfo=JSON.parse('[{"username":"asd","name":"s","phone":"123456"},{"username":"zxc","name":"z","phone":"123456"},{"username":"qwe","name":"q","phone":"123456"}]');
                     var userInfo = res.data;
                     var NewData = [];
                     if (userInfo.length) {
                         for (var i = 0; i < userInfo.length; i++) {
-                            if (userInfo[i]===null) continue;
+                            //if (userInfo[i]===null) continue;
                             var dataNewObj = {
                                 'id':'',
-                                "username": '',
                                 "name": '',
-                                'phone': '',
+                                "description": '',
+                                'createTime': '',
+                                'tenantId': '',
                             };
                             dataNewObj.id=i;
-                            dataNewObj.username = userInfo[i].userName;
                             dataNewObj.name = userInfo[i].name;
-                            dataNewObj.phone = userInfo[i].phone;
+                            dataNewObj.description = userInfo[i].description;
+                            dataNewObj.createTime = userInfo[i].createTime;
+                            dataNewObj.tenantId = userInfo[i].tenantId;
                             NewData.push(dataNewObj);
                         }
                         console.log(NewData)
@@ -152,29 +158,28 @@ function addFunctionAlty1(value, row, index) {
 function addFunctionAlty(value, row, index) {
     var btnText = '';
 
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamUserInfo(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
 
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toTenantModUserInf(" + "'" + row.username + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toUserModGroupInf(" + "'" + row.name + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
 
     return btnText;
 }
 
 
-function toExamUserInfo(id){
+function toExamGroupInfo(id){
     setCookie("userIndex",id)
-    window.location.href = "examUserInf.html" //界面跳转
+    window.location.href = "examGroupInf.html" //界面跳转
 }
 
-function toTenantModUserInf(userName){
-    setCookie("userName",userName)
-    window.location.href = "tenantModUserInf.html" //界面跳转
+function toUserModGroupInf(name){
+    setCookie("name",name)
+    window.location.href = "userModGroupInf.html" //界面跳转
 }
 
 // 修改用户状态（禁用、开启）
 function changeStates(id) {
-    //var url = '/tenant/list?tenantId='+getCookie("tenantId");
-    var url = '/tenant/list';
-    var data = {"tenantId": getCookie("tenantId")};
+    var url = '/user/list';
+    var data = {"userId": getCookie("userId")};
     commonAjaxGet(true, url, data, changeUserStates);
 
     // 查看用户信息成功
@@ -184,13 +189,13 @@ function changeStates(id) {
             var userInfo = result.data[id];
             console.log(userInfo);
             var state=userInfo.state;
-            var url=(state===0?'/tenant/recover':'/tenant/delete')
+            var url=(state===0?'/user/recover':'/user/delete')
             var da = {
-                'userName':userInfo.userName,
-                'phone':userInfo.phone
+                'name':userInfo.name,
+                'description':userInfo.description,
             };
             commonAjaxPost(true,url,da,function (){
-                alert("修改用户状态成功")
+                alert("修改群组状态成功")
                 getUserList()
             })
 
@@ -198,7 +203,7 @@ function changeStates(id) {
         } else if (result.code === "333") {
             layer.msg(result.message, {icon: 2});
             setTimeout(function () {
-                window.location.href = '/manUser.html';
+                window.location.href = '/manGroup.html';
             }, 1000)
         } else {
             layer.msg(result.message, {icon: 2})

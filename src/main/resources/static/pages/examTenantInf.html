@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>查看用户信息</title>
+    <title>查看租户信息</title>
     <link href="pagesCss/login.css" rel="stylesheet" type="text/css">
     <link href="../images/favicon.ico" rel="shortcut icon">
     <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
@@ -11,14 +11,14 @@
     <script src="../plugins/layer/layer.js"></script>
     <script src="../plugins/cookie/jquery.cookie.js"></script>
     <script src="../common/common.js"></script>
-    <script src="pagesJS/examUserInf.js"></script>
+    <script src="pagesJS/examTenantInf.js"></script>
 </head>
 <body>
 <div class="login-box">
-    <h2>用户信息</h2>
+    <h2>租户信息</h2>
     <form>
         <h1>
-            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">用户名:</label>
+            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">租户名:</label>
             <span class="spanTitle" id="userNameSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
         <h1>
@@ -33,14 +33,14 @@
             <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">手机号：</label>
             <span class="spanTitle" id="phoneSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
         </h1>
-<!--        <h1>-->
-<!--            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">密保问题：</label>-->
-<!--            <span class="spanTitle" id="questionSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>-->
-<!--        </h1>-->
-<!--        <h1>-->
-<!--            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">密保答案：</label>-->
-<!--            <span class="spanTitle" id="answerSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>-->
-<!--        </h1>-->
+        <!--        <h1>-->
+        <!--            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">密保问题：</label>-->
+        <!--            <span class="spanTitle" id="questionSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>-->
+        <!--        </h1>-->
+        <!--        <h1>-->
+        <!--            <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">密保答案：</label>-->
+        <!--            <span class="spanTitle" id="answerSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>-->
+        <!--        </h1>-->
         <h1>
             <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">身份：用户</label>
         </h1>
@@ -62,7 +62,7 @@
 <script>
     function returnToManUser(){
         deleteCookie("userIndex")
-        window.location.href = "manUser.html" //界面跳转
+        window.location.href = "manTenant.html" //界面跳转
     }
 </script>
 </body>

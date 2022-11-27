@@ -23,9 +23,8 @@ public class Questionnaire {
      * 问题类型：诸如数学，社会，政治之类
      */
     private String type;
-    /**
-     * 存储的是question的id,以逗号分隔
-     */
+
+
     private String info;
 
     private String creatorId;

@@ -5,14 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.bean.HttpResponseEntity;
-import com.neu.common.Constants;
 import com.neu.common.utils.CommonUtils;
 import com.neu.common.utils.UUIDUtil;
-import com.neu.dao.QuestionMapper;
 import com.neu.dao.QuestionnaireMapper;
 import com.neu.dao.ReleasedQuestionnaireMapper;
 import com.neu.dao.TenantToUserMapper;
-import com.neu.dao.entity.Group;
 import com.neu.dao.entity.Question;
 import com.neu.dao.entity.Questionnaire;
 import com.neu.dao.entity.ReleasedQuestionnaire;
@@ -45,7 +42,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         String tenantId = tenantToUserMapper.queryTenantByUser(questionnaire.getCreatorId());
         questionnaire.setTenantId(tenantId);
-        questionnaire.setState(0);
+        questionnaire.setState(1);
         questionnaire.setId(UUIDUtil.getOneUUID());
         questionnaire.setCreateTime(DateUtil.now());
 
@@ -69,6 +66,7 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
             httpResponseEntity.setCode(INSERT_SUCCESS_CODE);
             httpResponseEntity.setMessage(INSERT_SUCCESS_MESSAGE);
         } catch (Exception e) {
+            e.printStackTrace();
             httpResponseEntity.setCode(INSERT_FAIL_CODE);
             httpResponseEntity.setMessage(INSERT_FAIL_MESSAGE);
         }
@@ -162,18 +160,14 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
     public HttpResponseEntity release(ReleasedQuestionnaire releasedQuestionnaire) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         String id = releasedQuestionnaire.getQuestionnaireId();
-        String releaseTime = releasedQuestionnaire.getReleasedTime();
-        if (CommonUtils.stringIsEmpty(id)||CommonUtils.stringIsEmpty(releaseTime)) {
-            httpResponseEntity.setCode(QUERY_FAIL_CODE);
-            httpResponseEntity.setMessage(EMPTY_ERROR);
-            return httpResponseEntity;
-        }
+
         Questionnaire questionnaire = query().eq("id", id).one();
         releasedQuestionnaire.setState(1);
         releasedQuestionnaire.setTenantId(questionnaire.getTenantId());
         releasedQuestionnaire.setAnswers(0);
         releasedQuestionnaire.setInfo(questionnaire.getInfo());
         releasedQuestionnaire.setType(questionnaire.getType());
+        releasedQuestionnaire.setReleasedTime(new Date().toString());
 
         Date date = new Date();
         releasedQuestionnaire.setReleasedTime(DateUtil.formatTime(date));
@@ -182,13 +176,31 @@ public class QuestionnaireServiceImpl extends ServiceImpl<QuestionnaireMapper, Q
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(java.util.Calendar.HOUR_OF_DAY, 2);
-        releasedQuestionnaire.setFinishedTime(dft.format(calendar.getTime()));
+        releasedQuestionnaire.setFinishTime(dft.format(calendar.getTime()));
 
         try {
             releasedQuestionnaireMapper.insert(releasedQuestionnaire);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return httpResponseEntity;
+    }
+
+
+    @Override
+    public HttpResponseEntity queryAllQuestionnaire(String creatorId) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Questionnaire> questionnaires = query().eq("creator_id", creatorId).list();
+
+        if (questionnaires.size()==0) {
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+        }else {
+            httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+            httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
+            httpResponseEntity.setData(questionnaires);
+        }
+
         return httpResponseEntity;
     }
 }

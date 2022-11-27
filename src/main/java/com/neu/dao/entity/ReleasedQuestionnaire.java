@@ -26,7 +26,7 @@ public class ReleasedQuestionnaire {
     /**
      * 格式为 yyyy:MM:dd HH:mm:ss
      */
-    private String finishedTime;
+    private String finishTime;
 
     private String type;
 

@@ -2,82 +2,8 @@
  * Created by Amy on 2018/8/13.
  */
 var questionnaireId = getCookie("questionnaireId")
-$(function () {
-    $("#questionNameCount").html( getCookie("QuestionnaireName") + "数量统计");
-
-    var oTable = new TableInit();
-    oTable.Init();
-
-//        添加下拉选择问卷
-    var selectContent = ''; //下拉选择内容
-    jQuery.ajax({
-        type: "POST",
-        url: httpRequestUrl + "/queryAllQuestionnaireByCreated",
-        dataType: 'json',
-        contentType: "application/json",
-        success: function (result) {
-            for (var i = 0; i < result.data.length; i++) {
-                selectContent += '<option value="' + result.data[i].id + '">' + result.data[i].questionName + '</option>'
-            }
-            $("#ddlActivitynew").html(selectContent)
-            $("#ddlActivitynew option[value='"+getCookie("questionId") +"']").attr("selected","selected");
-        }
-    });
-    getQuestionnaireCount();
-});
-
-//    切换问卷
-$("#ddlActivitynew").change(function () {
-    var activity = $(this).val();
-    var nameQuestion =  $(this)[0].selectedOptions[0].innerHTML;
-    if (activity) {
-        deleteCookie("questionId");
-        setCookie("questionId", activity)
-        deleteCookie("nameOfQuestionnaire");
-        setCookie("nameOfQuestionnaire", nameQuestion)
-        $("#questionNameCount").html( getCookie("nameOfQuestionnaire") + "数量统计");
-        getQuestionnaireCount();
-        getQuestionnaireAboutSchool();
-    }
-})
-
-// XXX问卷数量统计
-function getQuestionnaireCount() {
-    var url = '/queryQuestionnaireCount';
-    var data = {
-        "questionId": getCookie("questionId")
-    };
-    commonAjaxPost(true, url, data, function (result) {
-        if (result.code == "666") {
-            $("#example1Tr1").empty();
-            var questCountData = result.data;
-            var text = "";
-            text += "<tr>";
-            text += "<td>" + questCountData.dataName + "</td>";
-            text += "<td>" + questCountData.questionCount + "</td>";
-            text += "<td>" + questCountData.answerTotal + "</td>";
-            if (questCountData.answerRate == "�") {
-                text += "<td>-</td>";
-            } else {
-                text += "<td>" + questCountData.answerRate + "</td>";
-            }
-            text += "<td>" + questCountData.effectiveAnswer + "</td>";
-            text += "</tr>";
-            $("#example1Tr1").append(text);
-
-        } else if (result.code == "333") {
-            layer.msg(result.message, {icon: 2});
-            setTimeout(function () {
-                window.location.href = 'login.html';
-            }, 1000)
-        } else {
-            layer.msg(result.message, {icon: 2})
-        }
-    })
-}
-
-
-
+var oTable = new TableInit();
+oTable.Init();
 
 
 function TableInit() {
@@ -87,7 +13,7 @@ function TableInit() {
     oTableInit.Init = function () {
         $('#analyseTable').bootstrapTable({
             url: httpRequestUrl + '/release/queryQuestionnaireById?questionnaireId='+questionnaireId,         //请求后台的URL（*）
-            method: 'GET',                      //请求方式（*）
+            method: 'POST',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             pagination: true,                   //是否显示分页（*）
             //是否启用排序
@@ -137,12 +63,13 @@ function TableInit() {
                 //console.log(res);
                 if (res.code == "666") {
                     var questionnaire = res.data;
-                    var questionList = questionnaire.info;
+                    var questionList = JSON.parse(questionnaire.info);
+
 
                     var data = {
                         'questionnaireId':questionnaireId
                     }
-                    commonAjaxPost(true,'/release/getAnswersByQuestionnaire',data,success);
+                    commonAjaxGet(true,'/release/getAnswersByQuestionnaire',data,success);
 
                     function success(res){
                         if(res.code=="666"){
@@ -152,21 +79,21 @@ function TableInit() {
                                     'question':questionList[i].questionTitle,
                                     'answerInfo':''
                                 }
-                                var optionList = questionList[i].options;
-                                var optionCount = {};
+                                var optionList = questionList[i].questionOption;
+                                var optionCount = [];
                                 for (let j = 0; j < optionList.length; j++) {
                                     var count = 0;
                                     for (let k = 0; k < answerList.length; k++) {
 
-                                        if(answerList[i]==j){
+                                        if(JSON.parse(answerList[k].info)[i]==j){
                                             count++;
                                         }
                                     }
-                                    optionCount.add(count+"&");
+                                    optionCount.push(count);
                                 }
 
-                                object.answerInfo = optionCount;
-                                _$("#analyseTable").bootstrapTable('insertRow', {index: i, row: object});
+                                object.answerInfo = JSON.stringify(optionCount);
+                                $("#analyseTable").bootstrapTable('insertRow', {index: i, row: object});
                             }
                         }
                         else {

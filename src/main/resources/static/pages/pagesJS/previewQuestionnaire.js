@@ -7,6 +7,9 @@ var eORp = getCookie("type");     //判断是邮箱还是手机号还是连接
 var flag = "false";
 var answerId = getCookie("answerId")
 
+if(eORp != 'preview'){
+    $("#title").text("答卷")
+}
 $(function () {
     $("#layui-layer1").css('top','45%');
     $("#layui-layer1").css('left','45%');
@@ -176,7 +179,7 @@ function submitQuestionnaire() {
         var da = {
             'questionnaireId': id,
             'accountId':answerId,
-            'info': answerListFinal,
+            'info': JSON.stringify(answerListFinal),
             'createTime': dateChange(timeEnd),
         };
         if (eORp == 'p') {
@@ -201,8 +204,9 @@ function addSuccess(res) {
     // location.reload();
     console.log(res)
     if (res.code == '666') {
-        alert(res.data);
-        $('.questionnaire').html('<p style="width: 60%; margin: 200px auto;text-align: center;font-size: 16px;">' + res.data + '</p>')
+        var s = "回答成功";
+        alert(s);
+        $('.questionnaire').html('<p style="width: 60%; margin: 200px auto;text-align: center;font-size: 16px;">' +s+ '</p>')
     } else {
         alert(res.message);
     }
@@ -222,26 +226,12 @@ function queryQuestionnaireByIdSuccess(res) {
 function setQuestion(result) {
 
     layer.closeAll('loading');
-    var arr = result.data.info.split("");
-    for(var i=0;i<arr.length;i++){
-        if(arr[i]==="（"){
-            var questionName1 = result.data.name;
-            $('#questionnaireTittle1').html(questionName1);
-            flag = "true";
-            break;
-        }else if(arr[i]==="("){
-            var questionName1 = result.data.name;
-            $('#questionnaireTittle1').html(questionName1);
-            flag = "true";
-        }
-    }
 
-    if(flag == "false"){
-        $('#questionnaireTittle1').html(result.data.name);
-    }
+    $('#questionnaireTittle1').html(result.data[0].name);
 
 
-    questionList = JSON.parse(result.data.info);
+    questionList = JSON.parse(result.data[0].info);
+    console.log(questionList);
     if(questionList!=null) {
         for (var i = 0; i < questionList.length; i++) {
             var questionType = questionList[i].questionType;
@@ -400,7 +390,7 @@ function getUrlInfo() {
 
 //生成二维码
 function getQrcode() {
-    var url = '/getShortUrlForLink';
+    var url = '/answer/getShortUrlForLink';
     var da = {
         'id': id
     };

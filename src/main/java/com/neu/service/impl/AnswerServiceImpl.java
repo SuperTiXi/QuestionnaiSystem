@@ -52,7 +52,7 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
         answer.setId(UUIDUtil.getOneUUID());
 
-        ReleasedQuestionnaire releasedQuestionnaire = releasedQuestionnaireService.query().eq("id", answer.getQuestionnaireId()).one();
+        ReleasedQuestionnaire releasedQuestionnaire = releasedQuestionnaireService.query().eq("questionnaire_id", answer.getQuestionnaireId()).one();
 
         int answers = releasedQuestionnaire.getAnswers();
         answers++;

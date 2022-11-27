@@ -22,7 +22,7 @@ public class ReleasedQuestionnaireController {
         return releasedQuestionnaireService.getReleasedList(userId);
     }
 
-    @RequestMapping(value = "/queryQuestionnaireById",method = RequestMethod.GET,headers ="Accept=application/json")
+    @RequestMapping(value = "/queryQuestionnaireById",method = RequestMethod.POST,headers ="Accept=application/json")
     public HttpResponseEntity queryQuestionnaireById(@RequestParam("questionnaireId") String id) {
         return releasedQuestionnaireService.queryQuestionnaireById(id);
     }
@@ -32,7 +32,7 @@ public class ReleasedQuestionnaireController {
         return releasedQuestionnaireService.getAnswersByQuestionnaire(id);
     }
 
-    @RequestMapping(value = "/questionnaireToAnswer",method = RequestMethod.GET,headers ="Accept=application/json")
+    @RequestMapping(value = "/questionnaireToAnswer",method = RequestMethod.POST,headers ="Accept=application/json")
     public HttpResponseEntity getQuestionnaireToAnswer(@RequestParam("answererId") String answererId){
 
         return releasedQuestionnaireService.getQuestionnaireToAnswer(answererId);

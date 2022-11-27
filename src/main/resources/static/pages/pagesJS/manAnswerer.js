@@ -19,7 +19,7 @@ function TableInit() {
     oTableInit.Init = function () {
         $('#userTable').bootstrapTable({
             url: httpRequestUrl + '/release/questionnaireToAnswer?answererId='+answererId,         //请求后台的URL（*）
-            method: 'GET',                      //请求方式（*）
+            method: 'POST',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true, //是否显示分页（*）
@@ -148,8 +148,8 @@ function addFunctionAlty1(value, row, index) {
 
 // 按钮函数调用处
 function answer(id) {
-    var questionnaireId=  questionnaire[id].id;
+    var questionnaireId=  questionnaire[id].questionnaireId;
     setCookie("type","l");
     setCookie("answerId",answererId)
-    window.open("previewQuestionnaire.html?i=" + questionnaireId);
+    window.open("previewQuestionnaire.html?questionnaireId=" + questionnaireId);
 }

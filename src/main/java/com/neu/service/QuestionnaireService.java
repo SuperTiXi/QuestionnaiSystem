@@ -19,4 +19,6 @@ public interface QuestionnaireService extends IService<Questionnaire> {
     HttpResponseEntity deleteQuestionnaires(List<String> ids);
 
     HttpResponseEntity release(ReleasedQuestionnaire releasedQuestionnaire);
+
+    HttpResponseEntity queryAllQuestionnaire(String creatorId);
 }

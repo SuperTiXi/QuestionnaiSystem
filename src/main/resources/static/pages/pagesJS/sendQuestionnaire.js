@@ -1,10 +1,10 @@
 var persons = []; //传入调查人员信息
-var sendTime = "";
+var sendTime = new Date();
 var questionnaireId = getCookie("questionnaireId");
 var dataId = getCookie("dataId");  // 在校生：2；毕业生：3；教师：4；用人单位：5
 var questionnaireName = getCookie("questionnaireName");
 var userId = getCookie("userId");
-document.getElementById("questPeople").innerText = "调查人员信息 — " + questionnaireName;
+document.getElementById("questPeople").innerText = "调查人员信息";
 document.getElementById("ctl02_ContentPlaceHolder1_InviteEmail1_hrefSend").innerText = "批量发送问卷 — " + questionnaireName;
 var shortMessageGetTime = '0';
 
@@ -18,7 +18,7 @@ window.operateEvents = {
         layer.confirm('您确认要删除此条人员信息吗？', {
             btn: ['确定', '取消'] //按钮
         }, function () {
-            _$("#userInfoTable").bootstrapTable('removeByUniqueId', row.no);
+            $("#userInfoTable").bootstrapTable('removeByUniqueId', row.no);
             layer.msg("删除成功", {icon: 1});
         });
     },
@@ -54,7 +54,7 @@ window.operateEvents = {
                 "groupId":row.id,
                 "questionnaireId":questionnaireId
             };
-            commonAjaxPost(false,"/answer/addGroupToQuestionnaire",data,function (res) {
+            commonAjaxPost(true,"/answer/addGroupToQuestionnaire",data,function success(res) {
                 if(res.code == '666'){
                     layer.msg(res.message,{icon: 1});
                 }
@@ -137,52 +137,6 @@ function addFunction(value, row, index){
         '<button id="Tbtn_choose" style=" background-color: #f9f9f9;color: #f00;">选择</button>'
     ].join('');
 }
-// if (dataId == "2") {
-//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../在校生上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-// } else if (dataId == "3") {
-//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../毕业生上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-// } else if (dataId == "4") {
-//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../教师上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-// } else if (dataId == "5") {
-//     $("#getDownLoadBtn").prepend("<a style=\"margin-right: 20px;\" href=\"../用人单位上传数据模板.xlsx\" class=\"add__batches pull-left\">下载模板</a>");
-//     columnsForCompany = [{
-//         checkbox: true,
-//         visible: false
-//     }, {
-//         field: 'no',
-//         title: '序号',
-//         align: 'center',
-//     }, {
-//         field: 'answerNum',
-//         title: '答题人编号',
-//         align: 'center',
-//         width: '200px'
-//     },
-//         {
-//             field: 'answerName',
-//             title: '用人单位',
-//             align: 'center'
-//         }, {
-//             field: 'answerBelong',
-//             title: '学校',
-//             align: 'center'
-//         }, {
-//             field: 'answerPhone',
-//             title: '手机号码',
-//             align: 'center'
-//         },
-//         {
-//             field: 'answerEmail',
-//             title: '邮箱',
-//             align: 'center'
-//         }, {
-//             field: 'operation',
-//             title: '操作',
-//             align: 'center',
-//             events: operateEvents,//给按钮注册事件
-//             formatter: addFunctionAlty//表格中增加按钮
-//         }]
-// }
 
 // 发送方式，短信：0； 邮件：1； 链接：2；
 var sendType = '0';
@@ -271,7 +225,8 @@ function TableInit() {
             showRefresh: false,                  //是否显示刷新按钮
             showToggle: false,
             minimumCountColumns: 2,             //最少允许的列数
-            uniqueId: "no",                     //每一行的唯一标识，一般为主键列
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            count:false,
             columns: columnsForGroup,
 
             responseHandler:function (res){
@@ -285,21 +240,23 @@ function TableInit() {
                             'description':'',
                             'createTime':''
                         };
-                        group.id = res.data[i].id;
+                        // group.id = i;
                         group.name = res.data[i].name;
                         group.description = res.data[i].description;
                         group.createTime = res.data[i].createTime;
-
                         groups.push(group);
                     }
                     for (var i = 0; i < groups.length; i++) {
-                        _$("#groupInfoTable").bootstrapTable('insertRow', {index: i, row: groups[i]});
-
+                        _$("#groupInfoTable").bootstrapTable('insertRow', {index:i,row: groups[i]});
                     }
+
+                    // var data = {
+                    //     total:groups.length,
+                    //     rows:groups
+                    // }
+                    // return data;
                 }
-                else {
-                    layer.msg(res.message);
-                }
+
             }
         });
     };
@@ -538,7 +495,6 @@ function layOutSend() {
             //短信发送问卷
             var data = {
                 "questionnaireId": questionnaireId,           //问卷id
-                "releaseTime": sendTime,            //发送时间
             };
             setTimeout(function () {
                 layer.msg("发送成功", {icon: 1});
@@ -551,7 +507,9 @@ function layOutSend() {
                 "dataType": "json",
                 "contentType": "application/json",
             success: function (result) {
-
+                if(result.code =="666"){
+                    alert("发送成功")
+                }
 
             },
             error: function (jqXHR, textStatus, errorThrown) {

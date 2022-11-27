@@ -955,17 +955,18 @@ function editFinish() {
                 }
             }
         }
+
+        console.log(questionList)
         //获取问卷名称
         var name = $('.questionTitle').text();
         //获取问卷说明
 
-        var da = '';
+
         var url = '/questionnaire/modifyQuestionnaire';
-        da = {
-            'info': questionList,
+         var da = {
+            'info': JSON.stringify(questionList),
             'id': questionnaireId,
             'name': name
-            //'endTime': ''
         };
         console.log(da);
         commonAjaxPost(true, url, da, addQuestionnaireSuccess)
@@ -985,7 +986,7 @@ function previewQuestion() {
     } else {
         deleteCookie('previewId');
         // window.location.href = 'previewQuestionnaire.html?i=' + idQ;
-        window.open("previewQuestionnaire.html?i=" + questionnaireId);
+        window.open("previewQuestionnaire.html?questionnaireId=" + questionnaireId);
     }
 }
 
@@ -1004,7 +1005,6 @@ function changeInfo() {
         , anim: 2 //0-6的动画形式，-1不开启
         , content: '<div style="padding: 20px 10px 0 10px;" id="cancelChange">' +
         '<div class="form-group"><label style="margin-bottom: 10px">问卷标题:</label><input class="form-control" id="questionName"></div>' +
-        '<div class="form-group"><label>问卷说明:</label><textarea class="form-control" style="height: 80px;" id="questionContent"></textarea></div>' +
         '<div class="form-group" style="margin-left: 330px">' +
         '<button class="layui-btn layui-btn-primary" onclick="cancelChange()">取消</button>' +
         '<button class="layui-btn layui-btn-normal" onclick="sureChange()">确定</button></div>' +
@@ -1045,7 +1045,7 @@ function getQuestion() {
                 //存选项的数组
                 var questionOption = [];  //单个题的所有选项
                 jcxxxx.children(".wjdc_list").children("li").each(function () {
-                    var questionOptionObj = {lineTitle: "", optionWord: "", optionGrade: ""};  //单个题的单个选项
+                    var questionOptionObj = {lineTitle: "0", optionWord: "0", optionGrade: "0"};  //单个题的单个选项
                     var chooseOption = jcxxxx.children(".wjdc_list").children("li").eq(bjjs_bj + 1).find("span").text(); //题目选项文字
                     questionOptionObj.optionWord = chooseOption;  //选项文字
                     questionOption.push(questionOptionObj);
@@ -1075,7 +1075,7 @@ function getQuestion() {
                 var questionOption = [];  //单个题的所有选项
                 if (jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').eq(0).find('td').length > jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').length) {
                     jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').eq(0).find('td').each(function () {
-                        var questionOptionObj = {lineTitle: "", optionWord: "", optionGrade: ""};  //单个题的单个选项
+                        var questionOptionObj = {lineTitle: "0", optionWord: "0", optionGrade: "0"};  //单个题的单个选项
                         var lineTitle = jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').eq(bjjs_bj + 1).find('td').eq(0).html(); //题目选项文字
                         if (lineTitle == null) {
                             lineTitle = '';
@@ -1091,7 +1091,7 @@ function getQuestion() {
                     });
                 } else {
                     jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').each(function () {
-                        var questionOptionObj = {lineTitle: "", optionWord: "", optionGrade: ""};  //单个题的单个选项
+                        var questionOptionObj = {lineTitle: "0", optionWord: "0", optionGrade: "0"};  //单个题的单个选项
                         var lineTitle = jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').eq(bjjs_bj + 1).find('td').eq(0).html(); //题目选项文字
                         if (lineTitle == null) {
                             lineTitle = '';
@@ -1124,7 +1124,7 @@ function getQuestion() {
                 //存选项的数组
                 var questionOption = [];  //单个题的所有选项
                 jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').eq(0).find('td').each(function () {
-                    var questionOptionObj = {lineTitle: "", optionWord: "", optionGrade: ""};  //单个题的单个选项
+                    var questionOptionObj = {lineTitle: "0", optionWord: "0", optionGrade: "0"};  //单个题的单个选项
                     var chooseOption = jcxxxx.children(".wjdc_list").children(".tswjdc_table").children('tbody').find('tr').eq(0).find('td').eq(bjjs_bj).text(); //题目选项文字
                     questionOptionObj.optionWord = chooseOption;  //选项文字
                     questionOption.push(questionOptionObj);
@@ -1189,12 +1189,12 @@ function addQuestionnaireSuccess(res) {
 
 //根据id查询问卷详情
 function queryQuestionnaireAllSuccess(res) {
-    console.log(res);
+
     deleteCookie('questionList');
     if (res.code == '666') {
         // alert("查询问卷详情成功");
         //查询的是历史问卷
-        $('.questionTitle').text(res.data.name); //问卷名称
+        $('.questionTitle').text(res.data[0].name); //问卷名称
         questionIdForChange = res.data.id;
         dataId = res.data.dataId;
         console.log(res.data.questionName);
@@ -1211,7 +1211,7 @@ function queryQuestionnaireAllSuccess(res) {
             startTime = res.data.startTime;
             questionStop = res.data.questionStop;
         }
-        var question = JSON.parse(res.data.info);
+        var question = JSON.parse(res.data[0].info);
         setCookie('questionList', question);
         if (question != null) {
             for (var i = 0; i < question.length; i++) {

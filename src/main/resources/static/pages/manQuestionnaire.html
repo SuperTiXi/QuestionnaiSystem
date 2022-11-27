@@ -11,31 +11,28 @@
   <script src="../plugins/layer/layer.js"></script>
   <script src="../plugins/cookie/jquery.cookie.js"></script>
   <script src="../common/common.js"></script>
-  <script src="pagesJS/manGroup.js"></script>
+  <script src="pagesJS/manQuestionnaire.js"></script>
   <title>问卷管理系统</title>
 </head>
 <body>
-<h1 >群组管理 </h1>
+<h1 >问卷管理 </h1>
 
 <h1>
   <div align="left"><label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
-    <button class="buttonL" onclick="toAddNewGroup()">添加群组</button>
-    <button class="buttonL" onclick="">添加答者</button>
-    <button class="buttonL" onclick="manQ()">问卷管理</button>
+    <button class="buttonL" onclick="addNewQ()">添加问卷</button>
     <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
     <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
-    <input class="user-box" type="text" name="searchUN" id="searchUN" placeholder="在此输入群组名名称">
+    <input class="user-box" type="text" name="searchUN" id="searchUN" placeholder="在此输入问卷名称">
     <button class="buttonL" onclick="">搜索</button>
   </div>
 </h1>
 <table id="userTable" class="container">
-
 </table>
 <script>
-  function toAddNewGroup(){
-    window.location.href = "addNewGroup.html" //界面跳转
+  function toAddNewQuestionnaire(){
+    alert("fuck")
+    // window.location.href = "addNewQuestionnaire.html" //界面跳转
   }
-
 </script>
 </body>
 </html>

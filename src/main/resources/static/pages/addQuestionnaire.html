@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加问卷</title>
+    <link href="pagesCss/login.css" rel="stylesheet" type="text/css">
+    <link href="../images/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+<div class="login-box">
+    <h2>添加新问卷</h2>
+    <form>
+        <div class="user-box">
+            <input type="text" name="questionnaireName" id="questionnaireName">
+            <label>问卷名</label>
+        </div>
+        <div class="user-box">
+            <input type="text" name="type" id="type">
+            <label>类型</label>
+        </div>
+
+        <a href="#" onclick="regNewUser()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            确定
+        </a>
+        <label></label>
+        <a href="#" onclick="returnToManUser()" >
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            返回
+        </a>
+    </form>
+</div>
+<script type="text/javascript" defer="true">
+    function regNewUser() {
+        var questionnaireName = document.getElementById("questionnaireName").value;
+        var type = document.getElementById("type").value;
+
+        var url = '/questionnaire/createQuestionnaire';
+
+        var data = {
+            "name": questionnaireName,
+            "type": type,
+            "creatorId":getCookie("userId"),
+            "info":"null"
+        };
+        commonAjaxPost(true, url, data, function (result) {
+            if (result.code == "666") {
+                layer.msg("问卷创建成功，权限已开启", {icon: 1});
+                setTimeout(function () {
+                    window.location.href = 'manQuestionnaire.html';
+                }, 1000)
+            }else if(result.code == "50003"){
+                //用户名已存在
+                layer.msg(result.message, {icon: 2});
+            } else if (result.code == "333") {
+                layer.msg(result.message, {icon: 2});
+                setTimeout(function () {
+                    window.location.href = 'manUser.html';
+                }, 1000)
+            } else {
+                layer.msg(result.message, {icon: 2});
+            }
+        })
+    }
+
+    function returnToManUser(){
+        window.location.href = "manQuestionnaire.html" //界面跳转
+    }
+</script>
+<script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+<script src="../js/zhezhao.js?v=3" type="text/javascript"></script>
+<script src="../plugins/layer/layer.js"></script>
+<script src="../plugins/cookie/jquery.cookie.js"></script>
+<script src="../common/common.js"></script>
+</body>
+</html>

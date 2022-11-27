@@ -3,29 +3,9 @@
  */
 
 var questionnaireId = getCookie("questionnaireId")
-$(function () {
-    $("#questionNameCount").html( getCookie("QuestionnaireName") + "数量统计");
+var oTable = new TableInit();
+oTable.Init();
 
-    var oTable = new TableInit();
-    oTable.Init();
-
-//        添加下拉选择问卷
-    var selectContent = ''; //下拉选择内容
-    jQuery.ajax({
-        type: "POST",
-        url: httpRequestUrl + "/queryAllQuestionnaireByCreated",
-        dataType: 'json',
-        contentType: "application/json",
-        success: function (result) {
-            for (var i = 0; i < result.data.length; i++) {
-                selectContent += '<option value="' + result.data[i].id + '">' + result.data[i].questionName + '</option>'
-            }
-            $("#ddlActivitynew").html(selectContent)
-            $("#ddlActivitynew option[value='"+getCookie("questionId") +"']").attr("selected","selected");
-        }
-    });
-    getQuestionnaireCount();
-});
 
 //    切换问卷
 $("#ddlActivitynew").change(function () {
@@ -42,53 +22,15 @@ $("#ddlActivitynew").change(function () {
     }
 })
 
-// XXX问卷数量统计
-function getQuestionnaireCount() {
-    var url = '/queryQuestionnaireCount';
-    var data = {
-        "questionId": getCookie("questionId")
-    };
-    commonAjaxPost(true, url, data, function (result) {
-        if (result.code == "666") {
-            $("#example1Tr1").empty();
-            var questCountData = result.data;
-            var text = "";
-            text += "<tr>";
-            text += "<td>" + questCountData.dataName + "</td>";
-            text += "<td>" + questCountData.questionCount + "</td>";
-            text += "<td>" + questCountData.answerTotal + "</td>";
-            if (questCountData.answerRate == "�") {
-                text += "<td>-</td>";
-            } else {
-                text += "<td>" + questCountData.answerRate + "</td>";
-            }
-            text += "<td>" + questCountData.effectiveAnswer + "</td>";
-            text += "</tr>";
-            $("#example1Tr1").append(text);
-
-        } else if (result.code == "333") {
-            layer.msg(result.message, {icon: 2});
-            setTimeout(function () {
-                window.location.href = 'login.html';
-            }, 1000)
-        } else {
-            layer.msg(result.message, {icon: 2})
-        }
-    })
-}
-
-
-
 
 
 function TableInit() {
-
     var oTableInit = new Object();
     //初始化Table
     oTableInit.Init = function () {
         $('#countTable').bootstrapTable({
             url: httpRequestUrl + '/release/queryQuestionnaireById?questionnaireId='+questionnaireId,         //请求后台的URL（*）
-            method: 'GET',                      //请求方式（*）
+            method: 'POST',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             pagination: true,                   //是否显示分页（*）
             //是否启用排序
@@ -101,15 +43,12 @@ function TableInit() {
             pageNumber: 1, //初始化加载第一页，默认第一页
             queryParams: queryParams,//请求服务器时所传的参数
             sidePagination: 'server',//指定服务器端分页
-            pageSize: 100,//单页记录数
-            pageList: [100],//分页步进值
             search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
             silent: true,
             showRefresh: false,                  //是否显示刷新按钮
             showToggle: false,
             minimumCountColumns: 2,             //最少允许的列数
             uniqueId: "id",                     //每一行的唯一标识，一般为主键列
-
             columns: [{
                 checkbox: true,
                 visible: false
@@ -148,22 +87,24 @@ function TableInit() {
                 //console.log(res);
                 if (res.code == "666") {
                     var questionnaire = res.data;
-                    var questionList = questionnaire.info;
+                    var questionList = JSON.parse(questionnaire.info);
 
                     var data = {
-                        "questionnaireId":questionnaire.id
+                        "questionnaireId":questionnaire.questionnaireId
                     }
-                    commonAjaxPost(true,'/answer/getAnswerersCount',data,success)
+                    commonAjaxGet(true,'/answer/getAnswerersCount',data,success(res))
 
                     function success(res){
-                        for (let i = 0; i < questionList.length; i++) {
-                            var object = {
-                                'question':questionList[i].questionTitle,
-                                'answerNum':questionnaire.answers,
-                                'answerTotal':res.data,
-                                'rate':(questionnaire.answers)/(res.data)
+                        if(res.code =="666") {
+                            for (let i = 0; i < questionList.length; i++) {
+                                var object = {
+                                    'question': questionList[i].questionTitle,
+                                    'answerNum': questionList.length,
+                                    'answerTotal': res.data.answers,
+                                    'rate': (questionList.length) / (res.data.answers)
+                                }
+                                $('#countTable').bootstrapTable('insertRow', {index: i, row: object});
                             }
-                            _$('#countTable').bootstrapTable('insertRow', {index: i, row: object});
                         }
                     }
                 }

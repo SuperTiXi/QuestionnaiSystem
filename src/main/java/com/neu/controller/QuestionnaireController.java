@@ -34,6 +34,11 @@ public class QuestionnaireController {
         return questionnaireService.findQuestionnaire(map);
     }
 
+    @RequestMapping(value = "/list",method =RequestMethod.POST,headers = "Accept=application/json" )
+    public HttpResponseEntity queryAllQuestionnaire(@RequestParam("creatorId") String creatorId){
+
+        return questionnaireService.queryAllQuestionnaire(creatorId);
+    }
     /**
      *
      * @param info 问卷中存储的问题id

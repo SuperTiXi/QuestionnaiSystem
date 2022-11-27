@@ -10,9 +10,12 @@ var groupId;
 //var tenantId = getCookie("tenantId")
 //console.log("11row tid="+tenantId)
 
+
 function getUserList() {
     $("#userTable").bootstrapTable('refresh');
 }
+
+var str = {"id": "","name":"","type":"","state":""};
 
 function TableInit() {
 
@@ -20,19 +23,23 @@ function TableInit() {
     //初始化Table
     oTableInit.Init = function () {
         $('#userTable').bootstrapTable({
-            url: httpRequestUrl + '/user/list?userId=' + getCookie("userId"),         //请求后台的URL（*）
-            method: 'GET',                      //请求方式（*）
+            url: httpRequestUrl + '/questionnaire/list?creatorId='+getCookie("userId"),         //请求后台的URL（*）
+            method: 'POST',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true, //是否显示分页（*）
             //sortable:true,
-            //sortOrder: "asc",                   //排序方式
+            // sortOrder: "asc",                   //排序方式
             queryParamsType: '',
             dataType: 'json',
             paginationShowPageGo: true,
             showJumpto: true,
             pageNumber: 1, //初始化加载第一页，默认第一页
+            // data:JSON.parse('{"id": "","name":"","type":"","state":""}'),
+            // queryParams:JSON.stringify('{"id": "","name":"","type":"","state":""}'),
+            queryParams:JSON.stringify(str),
             // queryParams:JSON.stringify(getCookie("tenantId")),//请求服务器时所传的参数
+            //queryParams:queryParams("1"),//请求服务器时所传的参数
             sidePagination: 'server',//指定服务器端分页
             pageSize: 10,//单页记录数
             pageList: [10, 20, 30, 40],//分页步进值
@@ -56,23 +63,24 @@ function TableInit() {
                     }
                 },
                 {
+                    //id", "name","type", "creator_id", "tenant_id","high_quality","state"};
                     field: 'name',
-                    title: '群组名',
+                    title: '问卷名',
                     align: 'center',
                 },
                 {
-                    field: 'description',
-                    title: '描述',
+                    field: 'type',
+                    title: '类型',
                     align: 'center',
                 },
                 {
                     field: 'createTime',
-                    title: '时间',
+                    title: '设计时间',
                     align: 'center'
                 },
                 {
-                    field: 'tenantId',
-                    title: '所属租户',
+                    field: 'highQuality',
+                    title: '问卷质量',
                     align: 'center'
                 },
                 {
@@ -103,15 +111,15 @@ function TableInit() {
                             var dataNewObj = {
                                 'id':'',
                                 "name": '',
-                                "description": '',
+                                "type": '',
                                 'createTime': '',
-                                'tenantId': '',
+                                'highQuality': '',
                             };
                             dataNewObj.id=i;
                             dataNewObj.name = userInfo[i].name;
-                            dataNewObj.description = userInfo[i].description;
+                            dataNewObj.type = userInfo[i].type;
                             dataNewObj.createTime = userInfo[i].createTime;
-                            dataNewObj.tenantId = userInfo[i].tenantId;
+                            dataNewObj.highQuality = userInfo[i].highQuality;
                             NewData.push(dataNewObj);
                             groupId.push(userInfo[i].id);
                         }
@@ -132,12 +140,15 @@ function TableInit() {
 
     // 得到查询的参数
     function queryParams(params) {
-        var userName = $("#keyWord").val();
+        var userName = null;
         console.log(userName);
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
-            pageNum: params.pageNumber,
-            pageSize: params.pageSize,
-            userName: userName
+            //pageNum: params.pageNumber,
+           // pageSize: params.pageSize,
+            id: "",
+            name:"",
+            type:"",
+            state:"",
         };
         return JSON.stringify(temp);
     }
@@ -168,11 +179,9 @@ function addFunctionAlty(value, row, index) {
     var btnText = '';
 
     //btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + getCookie("tenantId") + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
-   // btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + getCookie("tenantId") + "'" +"," + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
-   //  btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + groupId[row.id] + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + groupId[row.id] + "'"  +"," + "'" + row.tenantId + "'" +  ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
-
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toUserModGroupInf(" + "'" + groupId[row.id] + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
+    // btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + getCookie("tenantId") + "'" +"," + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    //  btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + groupId[row.id] + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"lookQuestionnaire(" + "'" + groupId[row.id] + "'"  +")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
 
     return btnText;
 }
@@ -180,31 +189,34 @@ function addFunctionAlty(value, row, index) {
 
 // function toExamGroupInfo(id){
 // function toExamGroupInfo(id, gId){
-function toExamGroupInfo(gId,tid){
-    //var tid = getCookie("tenantId")
-    setCookie("tenantId",tid)
+// function toExamGroupInfo(gId,tid){
+//     //var tid = getCookie("tenantId")
+//     setCookie("tenantId",tid)
+//
+//     setCookie("groupId", gId)
+//     console.log(getCookie("groupId"))
+//     console.log("sh"+getCookie("tenantId"))
+//     window.location.href = "manGroupRespondent.html" //界面跳转
+// }
 
-    setCookie("groupId", gId)
-    console.log(getCookie("groupId"))
-    console.log("sh"+getCookie("tenantId"))
-    window.location.href = "manGroupRespondent.html" //界面跳转
+function lookQuestionnaire(questionnaireId){
+    // 看问卷
+    setCookie("questionnaireId",questionnaireId)
+    window.location.href = 'sendQuestionnaire.html';
 }
-
-function toUserModGroupInf(id){
-    setCookie("id",id)
-    window.location.href = "userModGroupInf.html" //界面跳转
+function modQuestionnaire(){
+    // 修改问卷
 }
+// function toUserModGroupInf(id){
+//     setCookie("id",id)
+//     window.location.href = "userModGroupInf.html" //界面跳转
+// }
 
-function manQ(){
-    console.log("userId = "+getCookie("userId"))
-    setCookie("userId", getCookie("userId"))
-    window.location.href = "manQuestionnaire.html" //界面跳转
-}
-
-// 修改用户状态（禁用、开启）
+// 修改状态（禁用、开启）
 function changeStates(id) {
-    var url = '/user/list';
-    var data = {"userId": getCookie("userId")};
+    var url = '/questionnaire/list';
+    console.log("yes userid = "+getCookie("userId"))
+    var data = {"creatorId": getCookie("userId")};
     commonAjaxGet(true, url, data, changeUserStates);
 
     // 查看用户信息成功
@@ -218,26 +230,25 @@ function changeStates(id) {
             console.log(da);
             console.log('stat' + state);
             commonAjaxPost(true,url,da,function (){
-                if(res.code =="666"){
-                    alert("修改群组状态为"+(state==0?"启用":"停用"));
-                    getUserList()
-                }
-                else {
-                    alert(res.message);
-                }
+                alert("修改群组状态成功")
+                getUserList()
             })
-
-
         } else if (result.code === "333") {
             layer.msg(result.message, {icon: 2});
             setTimeout(function () {
-                window.location.href = '/manGroup.html';
+                window.location.href = '../manGroup.html';
             }, 1000)
         } else {
             layer.msg(result.message, {icon: 2})
         }
 
     }
+}
+
+function addNewQ(){
+    //在这里调整
+
+    window.location.href = './addQuestionnaire.html';
 }
 
 

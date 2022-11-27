@@ -111,7 +111,7 @@ public class ReleasedQuestionnaireServiceImpl extends ServiceImpl<ReleasedQuesti
 
         List<ReleasedQuestionnaire> releasedQuestionnaires = new ArrayList<>();
         for (String s : questionnaire) {
-            ReleasedQuestionnaire releasedQuestionnaire = query().eq("id", s).one();
+            ReleasedQuestionnaire releasedQuestionnaire = query().eq("questionnaire_id", s).one();
             releasedQuestionnaires.add(releasedQuestionnaire);
         }
         if (releasedQuestionnaires==null) {

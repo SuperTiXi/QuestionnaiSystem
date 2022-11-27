@@ -103,4 +103,26 @@ public class ReleasedQuestionnaireServiceImpl extends ServiceImpl<ReleasedQuesti
 
         return httpResponseEntity;
     }
+
+    @Override
+    public HttpResponseEntity getQuestionnaireToAnswer(String answererId) {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<String> questionnaire = answererToQuestionnaireMapper.getQuestionnaireByAnswererId(answererId);
+
+        List<ReleasedQuestionnaire> releasedQuestionnaires = new ArrayList<>();
+        for (String s : questionnaire) {
+            ReleasedQuestionnaire releasedQuestionnaire = query().eq("id", s).one();
+            releasedQuestionnaires.add(releasedQuestionnaire);
+        }
+        if (releasedQuestionnaires==null) {
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+        }else {
+            httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+            httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
+            httpResponseEntity.setData(releasedQuestionnaires);
+        }
+
+        return httpResponseEntity;
+    }
 }

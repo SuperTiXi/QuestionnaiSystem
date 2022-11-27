@@ -31,4 +31,10 @@ public class ReleasedQuestionnaireController {
     public HttpResponseEntity getAnswersByQuestionnaire(@RequestParam("questionnaireId") String id) {
         return releasedQuestionnaireService.getAnswersByQuestionnaire(id);
     }
+
+    @RequestMapping(value = "/questionnaireToAnswer",method = RequestMethod.GET,headers ="Accept=application/json")
+    public HttpResponseEntity getQuestionnaireToAnswer(@RequestParam("answererId") String answererId){
+
+        return releasedQuestionnaireService.getQuestionnaireToAnswer(answererId);
+    }
 }

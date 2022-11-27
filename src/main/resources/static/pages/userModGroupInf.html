@@ -80,12 +80,15 @@
         }
         var url = '/user/modify';
         var data = {
+            "id": getCookie("id"),
             "name": document.getElementById("Name").value,
             "description": document.getElementById("description").value,
             "createTime": nowDate,
             "tenantId": getCookie("tenantId"),
             "state" : 1,
         };
+        console.log('ad'+data);
+        console.log('ad'+getCookie("id"));
         commonAjaxPost(true, url, data, function (result) {
             if (result.code == "666") {
                 layer.msg("群组修改成功，权限已开启", {icon: 1});

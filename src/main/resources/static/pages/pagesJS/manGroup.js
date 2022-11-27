@@ -6,6 +6,10 @@ $(function () {
     oTable.Init();
 });
 
+var groupId;
+//var tenantId = getCookie("tenantId")
+//console.log("11row tid="+tenantId)
+
 function getUserList() {
     $("#userTable").bootstrapTable('refresh');
 }
@@ -86,13 +90,16 @@ function TableInit() {
                     formatter: addFunctionAlty//表格中增加按钮
                 }],
             responseHandler: function (res) {
+                //var userInfo=JSON.parse('[{"name":"asd","description":"s","createTime":"123456","tenantId":"asd","status":"s","operation":"asd"}]');
                 console.log(res);
                 if(res.code === "666"){
                     var userInfo = res.data;
+                    console.log(res.data);
                     var NewData = [];
+                    groupId = [];
                     if (userInfo.length) {
                         for (var i = 0; i < userInfo.length; i++) {
-                            //if (userInfo[i]===null) continue;
+                            if (userInfo[i]===null) continue;
                             var dataNewObj = {
                                 'id':'',
                                 "name": '',
@@ -106,11 +113,13 @@ function TableInit() {
                             dataNewObj.createTime = userInfo[i].createTime;
                             dataNewObj.tenantId = userInfo[i].tenantId;
                             NewData.push(dataNewObj);
+                            groupId.push(userInfo[i].id);
                         }
-                        console.log(NewData)
+                        console.log('ac'+NewData)
+                        console.log('ac'+groupId)
                     }
                     var data = {
-                        total: res.data.length,
+                        total: NewData.length,
                         rows: NewData
                     };
                     return data;
@@ -158,21 +167,31 @@ function addFunctionAlty1(value, row, index) {
 function addFunctionAlty(value, row, index) {
     var btnText = '';
 
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    //btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + getCookie("tenantId") + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+   // btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + getCookie("tenantId") + "'" +"," + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+   //  btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + groupId[row.id] + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamGroupInfo(" + "'" + groupId[row.id] + "'"  +"," + "'" + row.tenantId + "'" +  ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
 
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toUserModGroupInf(" + "'" + row.name + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toUserModGroupInf(" + "'" + groupId[row.id] + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
 
     return btnText;
 }
 
 
-function toExamGroupInfo(id){
-    setCookie("userIndex",id)
-    window.location.href = "examGroupInf.html" //界面跳转
+// function toExamGroupInfo(id){
+// function toExamGroupInfo(id, gId){
+function toExamGroupInfo(gId,tid){
+    //var tid = getCookie("tenantId")
+    setCookie("tenantId",tid)
+
+    setCookie("groupId", gId)
+    console.log(getCookie("groupId"))
+    console.log("sh"+getCookie("tenantId"))
+    window.location.href = "manGroupRespondent.html" //界面跳转
 }
 
-function toUserModGroupInf(name){
-    setCookie("name",name)
+function toUserModGroupInf(id){
+    setCookie("id",id)
     window.location.href = "userModGroupInf.html" //界面跳转
 }
 
@@ -184,19 +203,22 @@ function changeStates(id) {
 
     // 查看用户信息成功
     function changeUserStates(result) {
-        //console.log(result)
         if (result.code == "666") {
             var userInfo = result.data[id];
-            console.log(userInfo);
             var state=userInfo.state;
+            alert("修改群组状态成功")
             var url=(state===0?'/user/recover':'/user/delete')
-            var da = {
-                'name':userInfo.name,
-                'description':userInfo.description,
-            };
+            var da = userInfo.id;
+            console.log(da);
+            console.log('stat' + state);
             commonAjaxPost(true,url,da,function (){
-                alert("修改群组状态成功")
-                getUserList()
+                if(res.code =="666"){
+                    alert("修改群组状态为"+(state==0?"启用":"停用"));
+                    getUserList()
+                }
+                else {
+                    alert(res.message);
+                }
             })
 
 

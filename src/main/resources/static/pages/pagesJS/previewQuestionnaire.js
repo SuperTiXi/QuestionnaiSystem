@@ -6,7 +6,6 @@ var contact = '';
 var eORp = getCookie("type");     //判断是邮箱还是手机号还是连接
 var flag = "false";
 var answerId = getCookie("answerId")
-var previewType = getCookie("previewType");
 
 $(function () {
     $("#layui-layer1").css('top','45%');
@@ -188,7 +187,7 @@ function submitQuestionnaire() {
         } else {
             alert("预览状态不支持答题")
         }
-        var url = '/addAnswerQuestionnaire';
+        var url = '/answer/insert';
         commonAjaxPost(false, url, da, addSuccess,addError)
    }
 }

@@ -104,7 +104,7 @@ function TableInit() {
                         console.log(NewData)
                     }
                     var data = {
-                        total: res.data.length,
+                        total: NewData.length,
                         rows: NewData
                     };
                     return data;
@@ -190,8 +190,13 @@ function changeStates(id) {
                 'phone':userInfo.phone
             };
             commonAjaxPost(true,url,da,function (){
-                alert("修改用户状态成功")
-                getUserList()
+                if(res.code =="666"){
+                    alert("修改租户状态为"+(state==0?"启用":"停用"));
+                    getUserList()
+                }
+                else {
+                    alert(res.message);
+                }
             })
 
 

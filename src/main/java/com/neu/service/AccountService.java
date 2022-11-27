@@ -32,7 +32,7 @@ public interface AccountService extends IService<Account> {
     HttpResponseEntity addUser(Account account, String tenantId);
 
 
-    HttpResponseEntity queryAllAnswerer(String groupId);
+    HttpResponseEntity queryAllGroupAnswerer(String groupId);
 
 
     HttpResponseEntity addAnswerer(Account answerer);
@@ -40,4 +40,6 @@ public interface AccountService extends IService<Account> {
     HttpResponseEntity charging();
 
     HttpResponseEntity pay(String tenantId, double money);
+
+    HttpResponseEntity queryAllAnswerer();
 }

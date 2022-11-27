@@ -26,9 +26,9 @@ public class GroupController {
      * @return 答者信息
      */
     @RequestMapping(value = "/list",method = RequestMethod.GET,headers = "Accept=application/json")
-    public HttpResponseEntity queryAllAnswerer(@RequestParam("groupId") String groupId){
+    public HttpResponseEntity queryAllGroupAnswerer(@RequestParam("groupId") String groupId){
 
-        return accountService.queryAllAnswerer(groupId);
+        return accountService.queryAllGroupAnswerer(groupId);
     }
 
     /**
@@ -64,5 +64,11 @@ public class GroupController {
     public HttpResponseEntity removeAnswererFromGroup(@RequestParam("answererId") String answererId,@RequestParam("groupId") String groupId){
 
         return groupService.removeAnswererFromGroup(answererId,groupId);
+    }
+
+    @RequestMapping(value = "/listAllAnswer",method = RequestMethod.GET,headers = "Accept=application/json")
+    public HttpResponseEntity queryAllAnswerer(){
+
+        return accountService.queryAllAnswerer();
     }
 }

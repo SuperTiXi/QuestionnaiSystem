@@ -1,34 +1,41 @@
 $(function () {
-    isLoginFun();
-    header();
-     $("#ctl01_lblUserId").text(getCookie('userId'));
+    //$("#ctl01_lblUserName").text(getCookie('groupId'));
     var oTable = new TableInit();
     oTable.Init();
 });
+//setCookie("groupId", "0d6df5ab6494429593761640c047ca63");
+var groupId = getCookie("groupId");
+console.log("shit"+groupId)
+console.log("shit"+getCookie("groupId"))
+var respondents;
+//setCookie("respondentUserName","ztx");
+//setCookie("tenantId","c0b11fdb65c24f0bafc5269357507757");
+var tenantId = getCookie("tenantId")
 
 function getUserList() {
-    $("#userTable").bootstrapTable('refresh');
+    $("#respondentTable").bootstrapTable('refresh');
 }
 
 function TableInit() {
 
     var oTableInit = new Object();
+    //console.log(groupId);
     //初始化Table
     oTableInit.Init = function () {
-        $('#userTable').bootstrapTable({
-            url: httpRequestUrl + '/tenant/list?tenantId='+getCookie("tenantId"),         //请求后台的URL（*）
+        $('#respondentTable').bootstrapTable({
+            url: httpRequestUrl + '/group/list?groupId='+groupId,         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
             pagination: true, //是否显示分页（*）
             //sortable:true,
             //sortOrder: "asc",                   //排序方式
-            queryParamsType: '',
+            //queryParamsType: '',
             dataType: 'json',
             paginationShowPageGo: true,
             showJumpto: true,
             pageNumber: 1, //初始化加载第一页，默认第一页
-            // queryParams:JSON.stringify(getCookie("tenantId")),//请求服务器时所传的参数
+            //queryParams: groupId,//请求服务器时所传的参数
             sidePagination: 'server',//指定服务器端分页
             pageSize: 10,//单页记录数
             pageList: [10, 20, 30, 40],//分页步进值
@@ -52,10 +59,10 @@ function TableInit() {
                     }
                 },
                 {
-                field: 'username',
-                title: '用户名',
-                align: 'center',
-            },
+                    field: 'username',
+                    title: '用户名',
+                    align: 'center',
+                },
                 {
                     field: 'name',
                     title: '昵称',
@@ -81,33 +88,33 @@ function TableInit() {
                     formatter: addFunctionAlty//表格中增加按钮
                 }],
             responseHandler: function (res) {
-                 console.log(res);
-                if(res.code === "666"){
-                    // var userInfo=JSON.parse('[{"username":"asd","name":"s","phone":"123456"},{"username":"zxc","name":"z","phone":"123456"},{"username":"qwe","name":"q","phone":"123456"}]');
-                    var userInfo = res.data;
-                    var NewData = [];
-                    if (userInfo.length) {
-                        for (var i = 0; i < userInfo.length; i++) {
-                            if (userInfo[i]===null) continue;
-                            var dataNewObj = {
-                                'id':'',
-                                "username": '',
-                                "name": '',
-                                'phone': '',
-                            };
-                            dataNewObj.id=i;
-                            dataNewObj.username = userInfo[i].userName;
-                            dataNewObj.name = userInfo[i].name;
-                            dataNewObj.phone = userInfo[i].phone;
-                            NewData.push(dataNewObj);
+                if(res.data == null){
+                    console.log("res is null")
+                }else{
+                    if(res.code === "666"){
+                        var userInfo = res.data;
+                        respondents = [];
+                        if (userInfo.length) {
+                            for (var i = 0; i < userInfo.length; i++) {
+                                var dataNewObj = {
+                                    "id": '',
+                                    "username": '',
+                                    "name": '',
+                                    'phone': '',
+                                };
+                                dataNewObj.id = userInfo[i].id;
+                                dataNewObj.username = userInfo[i].userName;
+                                dataNewObj.name = userInfo[i].name;
+                                dataNewObj.phone = userInfo[i].phone;
+                                respondents.push(dataNewObj);
+                            }
                         }
-                        console.log(NewData)
+                        var data = {
+                            total: respondents.length,
+                            rows: respondents
+                        };
+                        return data;
                     }
-                    var data = {
-                        total: NewData.length,
-                        rows: NewData
-                    };
-                    return data;
                 }
 
             }
@@ -126,7 +133,6 @@ function TableInit() {
         };
         return JSON.stringify(temp);
     }
-
     return oTableInit;
 }
 
@@ -134,8 +140,8 @@ function TableInit() {
 window.operateEvents = {
     //编辑
     'click #btn_count': function (e, value, row, index) {
-        // ind = row.id;
-        // $.cookie('userIndex', ind);
+        id = row.id;
+        $.cookie('questionId', id);
     }
 };
 
@@ -144,39 +150,57 @@ window.operateEvents = {
 function addFunctionAlty1(value, row, index) {
     var btnText = '';
 
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"changeStates(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">更改</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" id=\"btn_look\" onclick=\"changeStatus(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">停用</button>&nbsp;&nbsp;";
 
     return btnText;
 }
 
 function addFunctionAlty(value, row, index) {
     var btnText = '';
-
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamUserInfo(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
-
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toTenantModUserInf(" + "'" + row.username + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
+    console.log("please fuck: "+row.id)
+    btnText += "<button type=\"button\" id=\"btn_look\" onclick=\"lookAnswerPage(" + "'" + row.username + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    //btnText += "<button type=\"button\" id=\"btn_look\" onclick=\"lookAnswerPage(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" id=\"btn_look\" onclick=\"editAnswerPage(" + "'" + row.id + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
 
     return btnText;
 }
 
 
-function toExamUserInfo(id){
-    setCookie("userIndex",id)
-    window.location.href = "examUserInf.html" //界面跳转
+
+// 添加答者到群组
+function addNewRespondentToGroupPage() {
+    console.log(groupId);
+    setCookie('groupId', groupId);
+    setCookie('tenantId', getCookie("tenantId"))
+    window.location.href = './addNewRespondentToGroup.html';
 }
 
-function toTenantModUserInf(userName){
-    setCookie("userName",userName)
-    window.location.href = "tenantModUserInf.html" //界面跳转
+function editAnswerPage(editRespondentId) {
+    setCookie('respondentId', editRespondentId)
+    setCookie('tenantId', getCookie("tenantId"))
+    alert("修改答者")
+    window.location.href = './userModRespondentInf.html';
+}
+
+// function lookAnswerPage(rowId) {
+function lookAnswerPage(username) {
+    setCookie('respondentUserName', username)
+    setCookie('tenantId', getCookie("tenantId"))
+    console.log(getCookie("username"))
+    console.log("tenantId"+getCookie("tenantId"))
+    alert("查看答者")
+    window.location.href = './lookRespondent.html';
 }
 
 // 修改用户状态（禁用、开启）
-function changeStates(id) {
-    //var url = '/tenant/list?tenantId='+getCookie("tenantId");
-    var url = '/tenant/list';
-    var data = {"tenantId": getCookie("tenantId")};
+function changeStatus(id) {
+// 停用答者
+    alert("修改答者状态")
+    var url = '/group/list';
+    var data ={
+        "groupId":groupId
+    }
     commonAjaxGet(true, url, data, changeUserStates);
-
     // 查看用户信息成功
     function changeUserStates(result) {
         //console.log(result)
@@ -189,7 +213,7 @@ function changeStates(id) {
                 'userName':userInfo.userName,
                 'phone':userInfo.phone
             };
-            commonAjaxPost(true,url,da,function (){
+            commonAjaxPost(true,url,da,function (res){
                 if(res.code =="666"){
                     alert("修改用户状态为"+(state==0?"启用":"停用"));
                     getUserList()
@@ -212,4 +236,7 @@ function changeStates(id) {
     }
 }
 
+function searchRespondent() {
 
+    alert("搜索")
+}

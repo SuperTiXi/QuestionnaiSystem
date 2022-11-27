@@ -1,7 +1,9 @@
+var questionnaire = {};
+var answererId = getCookie("answererId");
 $(function () {
     isLoginFun();
     header();
-     $("#ctl01_lblUserId").text(getCookie('userId'));
+    $("#ctl01_lblUserId").text(getCookie('userId'));
     var oTable = new TableInit();
     oTable.Init();
 });
@@ -16,7 +18,7 @@ function TableInit() {
     //初始化Table
     oTableInit.Init = function () {
         $('#userTable').bootstrapTable({
-            url: httpRequestUrl + '/tenant/list?tenantId='+getCookie("tenantId"),         //请求后台的URL（*）
+            url: httpRequestUrl + '/release/questionnaireToAnswer?answererId='+answererId,         //请求后台的URL（*）
             method: 'GET',                      //请求方式（*）
             striped: true,                      //是否显示行间隔色
             cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
@@ -52,53 +54,47 @@ function TableInit() {
                     }
                 },
                 {
-                field: 'username',
-                title: '用户名',
-                align: 'center',
-            },
-                {
-                    field: 'name',
-                    title: '昵称',
+                    field: 'releasedTime',
+                    title: '发布时间',
                     align: 'center',
                 },
                 {
-                    field: 'phone',
-                    title: '手机号',
+                    field: 'finishedTime',
+                    title: '截止时间',
+                    align: 'center',
+                },
+                {
+                    field: 'type',
+                    title: '类别',
                     align: 'center'
                 },
                 {
                     field: 'status',
-                    title: '状态',
-                    align: 'center',
-                    events: operateEvents,//给按钮注册事件
-                    formatter: addFunctionAlty1//表格中增加按钮
-                },
-                {
-                    field: 'operation',
                     title: '操作',
                     align: 'center',
                     events: operateEvents,//给按钮注册事件
-                    formatter: addFunctionAlty//表格中增加按钮
+                    formatter: addFunctionAlty1//表格中增加按钮
                 }],
             responseHandler: function (res) {
-                 console.log(res);
+                console.log(res);
+                questionnaire = res.data;
                 if(res.code === "666"){
-                    // var userInfo=JSON.parse('[{"username":"asd","name":"s","phone":"123456"},{"username":"zxc","name":"z","phone":"123456"},{"username":"qwe","name":"q","phone":"123456"}]');
-                    var userInfo = res.data;
+                   // var userInfo=JSON.parse('[{"releasedTime":"asd","finishedTime":"s","type":"123456","answer":"123456"},{"releasedTime":"as43d","finishedTime":"s435","type":"1523456","answer":"1235456"},{"releasedTime":"a711sd","finishedTime":"77s","type":"127713456","answer":"12347456"}]');
+                   var userInfo = res.data;
                     var NewData = [];
                     if (userInfo.length) {
                         for (var i = 0; i < userInfo.length; i++) {
                             if (userInfo[i]===null) continue;
                             var dataNewObj = {
                                 'id':'',
-                                "username": '',
-                                "name": '',
-                                'phone': '',
+                                "releasedTime": '',
+                                "finishedTime": '',
+                                "type": '',
                             };
                             dataNewObj.id=i;
-                            dataNewObj.username = userInfo[i].userName;
-                            dataNewObj.name = userInfo[i].name;
-                            dataNewObj.phone = userInfo[i].phone;
+                            dataNewObj.releasedTime = userInfo[i].releasedTime;
+                            dataNewObj.finishedTime = userInfo[i].finishedTime;
+                            dataNewObj.type = userInfo[i].type;
                             NewData.push(dataNewObj);
                         }
                         console.log(NewData)
@@ -134,8 +130,8 @@ function TableInit() {
 window.operateEvents = {
     //编辑
     'click #btn_count': function (e, value, row, index) {
-        // ind = row.id;
-        // $.cookie('userIndex', ind);
+        ind = row.id;
+        $.cookie('userIndex', ind);
     }
 };
 
@@ -144,72 +140,16 @@ window.operateEvents = {
 function addFunctionAlty1(value, row, index) {
     var btnText = '';
 
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"changeStates(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">更改</button>&nbsp;&nbsp;";
-
-    return btnText;
-}
-
-function addFunctionAlty(value, row, index) {
-    var btnText = '';
-
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toExamUserInfo(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">查看</button>&nbsp;&nbsp;";
-
-    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"toTenantModUserInf(" + "'" + row.username + "'" + ")\" class=\"btn btn-default-g ajax-link\">修改</button>&nbsp;&nbsp;";
+    btnText += "<button type=\"button\" class=\"button\" id=\"btn_look\" onclick=\"answer(" + "'" + row.id + "'" + ")\" style='width: 77px;' class=\"btn btn-default-g ajax-link\">答题</button>&nbsp;&nbsp;";
 
     return btnText;
 }
 
 
-function toExamUserInfo(id){
-    setCookie("userIndex",id)
-    window.location.href = "examUserInf.html" //界面跳转
+// 按钮函数调用处
+function answer(id) {
+    var questionnaireId=  questionnaire[id].id;
+    setCookie("type","l");
+    setCookie("answerId",answererId)
+    window.open("previewQuestionnaire.html?i=" + questionnaireId);
 }
-
-function toTenantModUserInf(userName){
-    setCookie("userName",userName)
-    window.location.href = "tenantModUserInf.html" //界面跳转
-}
-
-// 修改用户状态（禁用、开启）
-function changeStates(id) {
-    //var url = '/tenant/list?tenantId='+getCookie("tenantId");
-    var url = '/tenant/list';
-    var data = {"tenantId": getCookie("tenantId")};
-    commonAjaxGet(true, url, data, changeUserStates);
-
-    // 查看用户信息成功
-    function changeUserStates(result) {
-        //console.log(result)
-        if (result.code == "666") {
-            var userInfo = result.data[id];
-            console.log(userInfo);
-            var state=userInfo.state;
-            var url=(state===0?'/tenant/recover':'/tenant/delete')
-            var da = {
-                'userName':userInfo.userName,
-                'phone':userInfo.phone
-            };
-            commonAjaxPost(true,url,da,function (){
-                if(res.code =="666"){
-                    alert("修改用户状态为"+(state==0?"启用":"停用"));
-                    getUserList()
-                }
-                else {
-                    alert(res.message);
-                }
-            })
-
-
-        } else if (result.code === "333") {
-            layer.msg(result.message, {icon: 2});
-            setTimeout(function () {
-                window.location.href = '/manUser.html';
-            }, 1000)
-        } else {
-            layer.msg(result.message, {icon: 2})
-        }
-
-    }
-}
-
-

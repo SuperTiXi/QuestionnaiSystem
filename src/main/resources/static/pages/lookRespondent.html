@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>查看答者信息</title>
+  <link href="pagesCss/userModRespondentInf.css" rel="stylesheet" type="text/css">
+  <link href="../images/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+<div class="login-box">
+  <h2>答者信息</h2>
+  <form>
+    <h1>
+      <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">用户名:</label>
+      <span class="spanTitle" id="userNameSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
+    </h1>
+    <h1>
+      <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">昵称：</label>
+      <span class="spanTitle" id="nameSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
+    </h1>
+    <h1>
+      <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">密码：</label>
+      <span class="spanTitle" id="passWordSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
+    </h1>
+    <h1>
+      <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">手机号：</label>
+      <span class="spanTitle" id="phoneSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
+    </h1>
+    <h1>
+        <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">密保问题：</label>
+        <span class="spanTitle" id="questionSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
+    </h1>
+    <h1>
+        <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">密保答案：</label>
+        <span class="spanTitle" id="answerSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
+    </h1>
+    <h1>
+      <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">身份：用户</label>
+    </h1>
+    <h1>
+      <label style="top: -20px;left: 0;color: #03e9f4;font-size: 12px;">状态：</label>
+      <span class="spanTitle" id="statusSpan" style="top: -20px;left: 0;color: #03e9f4;font-size: 15px;"></span>
+    </h1>
+
+    <label>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+    <a href="#" onclick="returnToMain()" >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      返回
+    </a>
+
+  </form>
+</div>
+<script type="text/javascript" defer="true">
+
+  function returnToMain(){
+    deleteCookie('userInfo');
+    window.location.href = "manGroupRespondent.html" //界面跳转
+  }
+</script>
+<script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+<script src="../plugins/layer/layer.js"></script>
+<script src="../plugins/cookie/jquery.cookie.js"></script>
+<script src="../common/common.js"></script>
+<script src="pagesJS/lookRespondent.js"></script>
+</body>
+</html>

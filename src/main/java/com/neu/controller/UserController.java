@@ -51,7 +51,7 @@ public class UserController {
      * @param groupId 群组id
      * @return 状态
      */
-    @RequestMapping(value = "/delete",method = RequestMethod.POST,headers = "Accept=application/json")
+    @RequestMapping(value = "/delete",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity delete(@RequestParam("groupId") String groupId){
 
         return groupService.delete(groupId);
@@ -62,7 +62,7 @@ public class UserController {
      * @param groupId id
      * @return 状态
      */
-    @RequestMapping(value = "/recover",method = RequestMethod.POST,headers = "Accept=application/json")
+    @RequestMapping(value = "/recover",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity recover(@RequestParam("groupId") String groupId){
 
         return groupService.recover(groupId);

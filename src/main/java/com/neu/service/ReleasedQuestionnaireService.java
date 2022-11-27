@@ -11,4 +11,5 @@ public interface ReleasedQuestionnaireService extends IService<ReleasedQuestionn
 
     HttpResponseEntity getAnswersByQuestionnaire(String id);
 
+    HttpResponseEntity getQuestionnaireToAnswer(String answererId);
 }

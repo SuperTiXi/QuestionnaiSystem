@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>修改答者信息</title>
+  <link href="pagesCss/userModRespondentInf.css" rel="stylesheet" type="text/css">
+  <link href="../images/favicon.ico" rel="shortcut icon">
+</head>
+<body>
+<div class="login-box">
+  <h2>修改答者</h2>
+  <form>
+    <div class="user-box">
+      <input type="text" name="Name" id="UserName">
+      <label>用户名</label>
+    </div>
+    <div class="user-box">
+      <input type="text" name="Name" id="Name">
+      <label>昵称</label>
+    </div>
+    <div class="user-box">
+      <input type="password" name="PassWord" id="PassWord">
+      <label>密码</label>
+    </div>
+    <div class="user-box">
+      <input type="password" name="rPassWord" id="rPassWord">
+      <label>确认密码</label>
+    </div>
+    <div class="user-box">
+      <input type="password" name="Phone" id="Phone">
+      <label>手机号</label>
+    </div>
+    <div class="user-box">
+      <input type="text" name="Question" id="Question">
+      <label>密保问题</label>
+    </div>
+    <div class="user-box">
+      <input type="text" name="Answer" id="Answer">
+      <label>密保答案</label>
+    </div>
+
+
+    <a href="#" onclick="modUser()" >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      确定
+    </a>
+    <label>-----------------------===</label>
+    <a href="#" onclick="returnToMain()" >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      返回
+    </a>
+
+  </form>
+</div>
+<!--<script type="text/javascript" defer="true">-->
+
+<!--</script>-->
+<script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>
+<script src="../plugins/layer/layer.js"></script>
+<script src="../plugins/cookie/jquery.cookie.js"></script>
+<script src="../common/common.js"></script>
+<script src="pagesJS/userModRespondentInf.js"></script>
+
+</body>
+</html>

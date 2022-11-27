@@ -44,7 +44,7 @@ public class AdminController {
      * @param phone 手机号
      * @return 状态
      */
-    @RequestMapping(value = "/delete",method = RequestMethod.POST,headers = "Accept=application/json")
+    @RequestMapping(value = "/delete",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity delete(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
 
         return accountService.delete(userName,phone);
@@ -56,7 +56,7 @@ public class AdminController {
      * @param phone 手机号
      * @return 状态
      */
-    @RequestMapping(value = "/recover",method = RequestMethod.POST,headers = "Accept=application/json")
+    @RequestMapping(value = "/recover",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity recover(@RequestParam("userName") String userName, @RequestParam("phone") String phone){
 
         return accountService.recover(userName,phone);

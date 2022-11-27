@@ -13,6 +13,7 @@ import com.neu.dao.entity.Answer;
 import com.neu.dao.entity.AnswererToQuestionnaire;
 import com.neu.dao.entity.ReleasedQuestionnaire;
 import com.neu.service.AnswerService;
+import com.neu.service.ReleasedQuestionnaireService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,9 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
     UserToGroupMapper userToGroupMapper;
     @Autowired
     AnswererToQuestionnaireMapper answererToQuestionnaireMapper;
+    @Autowired
+    ReleasedQuestionnaireService releasedQuestionnaireService;
+
     @Autowired
     ReleasedQuestionnaireMapper releasedQuestionnaireMapper;
 
@@ -48,6 +52,12 @@ public class AnswerServiceImpl extends ServiceImpl<AnswerMapper, Answer> impleme
 
         answer.setId(UUIDUtil.getOneUUID());
 
+        ReleasedQuestionnaire releasedQuestionnaire = releasedQuestionnaireService.query().eq("id", answer.getQuestionnaireId()).one();
+
+        int answers = releasedQuestionnaire.getAnswers();
+        answers++;
+        releasedQuestionnaire.setAnswers(answers);
+        releasedQuestionnaireService.updateById(releasedQuestionnaire);
         try {
             save(answer);
             httpResponseEntity.setCode(INSERT_SUCCESS_CODE);

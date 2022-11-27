@@ -72,21 +72,26 @@
     function loginSuccess(result) {
         if (result.code == '666') {
             // layer.msg(result.message, {icon:1});
-            setCookie('isLogin','1');
-            if (result.data.identity===1) {
-                setCookie('tenantId',result.data.id);
+            setCookie('isLogin', '1');
+
+
+            if (result.data.identity === 1) {
+                setCookie('tenantId', result.data.id);
                 window.location.href = "manUser.html" //界面跳转
-            }else if(result.data.identity===2){
-                setCookie('userId',result.data.id);
+            } else if (result.data.identity === 2) {
+                setCookie('userId', result.data.id);
                 window.location.href = "manGroup.html"
-            }else if(result.data.identity===0){
-                setCookie('adminId',result.data.id);
-                window.location.href = "manTenant.html";
+            } else if (result.data.identity === 0) {
+                setCookie('adminId', result.data.id);
+                window.location.href = "manTenant.html"
+            } else if (result.data.identity === 3) {
+                setCookie('answererId', result.data.id);
+                window.location.href = "manAnswerer.html"
+            } else {
+                //layer.msg("此用户不存在",{icon:2});
+                $('#errorMsgBox').show()
+                $('#errorMsgBox').text(result.message)
             }
-        } else {
-            //layer.msg("此用户不存在",{icon:2});
-            $('#errorMsgBox').show()
-            $('#errorMsgBox').text(result.message)
         }
     }
     function loginByUserName(){
@@ -103,7 +108,8 @@
             "phone":Phone.value
         };
         commonAjaxPost(true, "/account/sendCode", da)
-
+        const a1 =Math.floor(Math.random()*(9999-1000+1)+1000);
+        alert("发送成功！验证码为"+a1)
     }
 </script>
 <script src="../plugins/jQuery/jquery-1.12.4.min.js"></script>

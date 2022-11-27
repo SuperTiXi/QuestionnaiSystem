@@ -15,6 +15,7 @@ import com.neu.dao.entity.Charging;
 import com.neu.dao.entity.ReleasedQuestionnaire;
 import com.neu.dao.entity.TenantToUser;
 import com.neu.service.AccountService;
+import com.neu.service.ReleasedQuestionnaireService;
 import org.apache.http.HttpResponse;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     UserToGroupMapper userToGroupMapper;
     @Autowired
     GroupToAnswererMapper groupToAnswererMapper;
-
     @Autowired
     ChargingMapper chargingMapper;
+
+    @Autowired
+    ReleasedQuestionnaireService releasedQuestionnaireService;
 
     @Override
     public HttpResponseEntity loginByUserName(String userName, String password) {
@@ -415,8 +418,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return httpResponseEntity;
     }
 
+
     @Override
-    public HttpResponseEntity queryAllAnswerer(String groupId) {
+    public HttpResponseEntity queryAllGroupAnswerer(String groupId) {
         HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
         List<String> answerer = groupToAnswererMapper.getAnswererByGroup(groupId);
 
@@ -533,6 +537,24 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        return httpResponseEntity;
+    }
+
+    @Override
+    public HttpResponseEntity queryAllAnswerer() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Account> answerers = query().eq("identity", 3).list();
+
+        if(answerers.isEmpty()){
+            httpResponseEntity.setCode(QUERY_FAIL_CODE);
+            httpResponseEntity.setMessage(QUERY_FAIL_MESSAGE);
+            return httpResponseEntity;
+        }
+
+        httpResponseEntity.setCode(QUERY_SUCCESS_CODE);
+        httpResponseEntity.setMessage(QUERY_SUCCESS_MESSAGE);
+        httpResponseEntity.setData(answerers);
 
         return httpResponseEntity;
     }

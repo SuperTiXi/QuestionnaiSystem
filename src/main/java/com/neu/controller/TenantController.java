@@ -87,7 +87,7 @@ public class TenantController {
      * @param money 付款数目
      * @return 付款状态
      */
-    @RequestMapping(value = "/pay",method = RequestMethod.POST,headers = "Accept=application/json")
+    @RequestMapping(value = "/pay",method = RequestMethod.GET,headers = "Accept=application/json")
     public HttpResponseEntity pay(@RequestParam("tenantId") String tenantId,@RequestParam("money") double money){
 
         return accountService.pay(tenantId,money);
